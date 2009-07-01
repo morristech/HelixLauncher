@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="application_name">"Ana sayfa"</string>
+    <string name="folder_name">"Klasör"</string>
+    <string name="chooser_wallpaper">"Duvar kağıdı seç"</string>
+    <string name="wallpaper_instructions">"Duvar kağıdı ayarla"</string>
+    <string name="pick_wallpaper">"Duvar kağıdı galerisi"</string>
+    <string name="activity_not_found">"Uygulama telefonunuza yüklenmedi."</string>
+    <string name="rename_folder_label">"Klasör adı"</string>
+    <string name="rename_folder_title">"Klasörü yeniden adlandır"</string>
+    <string name="rename_action">"Tamam"</string>
+    <string name="cancel_action">"İptal et"</string>
+    <string name="menu_item_add_item">"Ana Sayfa ekranına ekle"</string>
+    <!-- no translation found for group_applications (4118484163419674240) -->
+    <skip />
+    <!-- no translation found for group_shortcuts (9133529424900391877) -->
+    <skip />
+    <!-- no translation found for group_search (5905328940867162196) -->
+    <skip />
+    <!-- no translation found for group_folder (5143593791798929193) -->
+    <skip />
+    <!-- no translation found for group_live_folders (2664945399140647217) -->
+    <skip />
+    <!-- no translation found for group_widgets (6704978494073105844) -->
+    <skip />
+    <!-- no translation found for group_wallpapers (1568191644272224858) -->
+    <skip />
+    <string name="add_folder">"Klasör"</string>
+    <string name="add_clock">"Saat"</string>
+    <string name="add_photo_frame">"Resim çerçevesi"</string>
+    <string name="add_search">"Ara"</string>
+    <string name="out_of_space">"Bu Ana sayfa ekranında daha fazla yer yok."</string>
+    <!-- no translation found for title_select_shortcut (2858897527672831763) -->
+    <skip />
+    <!-- no translation found for title_select_live_folder (3753447798805166749) -->
+    <skip />
+    <string name="menu_add">"Ekle"</string>
+    <string name="menu_wallpaper">"Duvar kağıdı"</string>
+    <string name="menu_search">"Ara"</string>
+    <string name="menu_notifications">"Bildirimler"</string>
+    <string name="menu_settings">"Ayarlar"</string>
+    <string name="permlab_install_shortcut">"kısayolları yükleyin"</string>
+    <string name="permdesc_install_shortcut">"Bir uygulamanın kısayolları kullanıcının müdahalesi olmadan eklemesine olanak tanır."</string>
+    <string name="permlab_uninstall_shortcut">"kısayolları kaldırın"</string>
+    <string name="permdesc_uninstall_shortcut">"Bir uygulamanın kısayolları kullanıcının müdahalesi olmadan kaldırmasına olanak tanır."</string>
+    <string name="permlab_read_settings">"Ana Sayfa ayarlarını ve kısayollarını oku"</string>
+    <string name="permdesc_read_settings">"Bir uygulamaya ayarları ve kısayolları Ana Sayfa\'dan okuma izni verir."</string>
+    <string name="permlab_write_settings">"Ana Sayfa ayarlarını ve kısayolları yaz"</string>
+    <string name="permdesc_write_settings">"Bir uygulamaya ayarları ve kısayolları Ana Sayfa\'dan değiştirme izni verir."</string>
+    <string name="search_hint">"Google Arama"</string>
+    <!-- no translation found for gadget_error_text (8359351016167075858) -->
+    <skip />
+</resources>
