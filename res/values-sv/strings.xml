@@ -53,6 +53,6 @@
     <string name="permdesc_read_settings">"Tillåter att ett program läser inställningar och genvägar på startsidan."</string>
     <string name="permlab_write_settings">"skriva inställningar och genvägar för startsidan"</string>
     <string name="permdesc_write_settings">"Tillåter att ett program ändrar inställningar och genvägar på startsidan."</string>
-    <string name="search_hint">"Google Sökning"</string>
+    <string name="search_hint">"Google-sökning"</string>
     <string name="gadget_error_text">"Det gick inte att läsa in widgeten"</string>
 </resources>
