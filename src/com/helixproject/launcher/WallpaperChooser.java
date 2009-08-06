@@ -17,6 +17,11 @@
 package com.helixproject.launcher;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,6 +97,7 @@ public class WallpaperChooser extends Activity implements AdapterView.OnItemSele
         Collections.addAll(mImages, IMAGE_IDS);
 
         final Resources resources = getResources();
+
         final String[] extras = resources.getStringArray(R.array.extra_wallpapers);
         final String packageName = getApplication().getPackageName();
 
@@ -143,8 +149,9 @@ public class WallpaperChooser extends Activity implements AdapterView.OnItemSele
 
         mIsWallpaperSet = true;
         try {
-            InputStream stream = getResources().openRawResource(mImages.get(position));
-            setWallpaper(stream);
+            WallpaperManager wpm = (WallpaperManager)getSystemService(
+                    WALLPAPER_SERVICE);
+            wpm.set(mImages.get(position));
             setResult(RESULT_OK);
             finish();
         } catch (IOException e) {
