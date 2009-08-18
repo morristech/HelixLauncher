@@ -112,10 +112,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static final boolean PROFILE_DRAWER = false;
     private static final boolean PROFILE_ROTATE = false;
     private static final boolean DEBUG_USER_INTERFACE = false;
-
-    private static final int WALLPAPER_SCREENS_SPAN = 2;
-
-    private static final int MENU_GROUP_ADD = 1;
+    private static final boolean ACTIVE_WALLPAPER = true;
+    
 	// Faruq: Modified menu arrangements (removed redundant item)
     private static final int MENU_ADD = Menu.FIRST + 1;
     private static final int MENU_WALLPAPER_SETTINGS = MENU_ADD + 1;
@@ -1528,15 +1526,17 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * wallpaper.
      */
     private void registerIntentReceivers() {
-        if (sWallpaperReceiver == null) {
-            final Application application = getApplication();
-
-            sWallpaperReceiver = new WallpaperIntentReceiver(application, this);
-
-            IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
-            application.registerReceiver(sWallpaperReceiver, filter);
-        } else {
-            sWallpaperReceiver.setLauncher(this);
+        if (!ACTIVE_WALLPAPER) {
+            if (sWallpaperReceiver == null) {
+                final Application application = getApplication();
+    
+                sWallpaperReceiver = new WallpaperIntentReceiver(application, this);
+    
+                IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
+                application.registerReceiver(sWallpaperReceiver, filter);
+            } else {
+                sWallpaperReceiver.setLauncher(this);
+            }
         }
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
@@ -1869,17 +1869,20 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private void loadWallpaper() {
-        // The first time the application is started, we load the wallpaper from
-        // the ApplicationContext
-        if (sWallpaper == null) {
-            final Drawable drawable = getWallpaper();
-            if (drawable instanceof BitmapDrawable) {
-                sWallpaper = ((BitmapDrawable) drawable).getBitmap();
-            } else {
-                throw new IllegalStateException("The wallpaper must be a BitmapDrawable.");
+        // Turned off, we are using a wallpaper service now.
+        if (!ACTIVE_WALLPAPER) {
+            // The first time the application is started, we load the wallpaper from
+            // the ApplicationContext
+            if (sWallpaper == null) {
+                final Drawable drawable = getWallpaper();
+                if (drawable instanceof BitmapDrawable) {
+                    sWallpaper = ((BitmapDrawable) drawable).getBitmap();
+                } else {
+                    throw new IllegalStateException("The wallpaper must be a BitmapDrawable.");
+                }
             }
+            mWorkspace.loadWallpaper(sWallpaper);
         }
-        mWorkspace.loadWallpaper(sWallpaper);
     }
 
     /**

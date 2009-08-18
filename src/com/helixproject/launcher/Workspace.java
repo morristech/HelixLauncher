@@ -16,6 +16,7 @@
 
 package com.helixproject.launcher;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
@@ -60,6 +61,8 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
     private int mDefaultScreen;
 
+    private final WallpaperManager mWallpaperManager;
+    
     private Paint mPaint;
     private Bitmap mWallpaper;
 
@@ -142,6 +145,8 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     public Workspace(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        mWallpaperManager = WallpaperManager.getInstance(context);
+        
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Workspace, defStyle, 0);
         mDefaultScreen = a.getInt(R.styleable.Workspace_defaultScreen, 1);
         a.recycle();
@@ -468,11 +473,20 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         }
     }
 
+    private void updateWallpaperOffset() {
+        updateWallpaperOffset(getChildAt(getChildCount() - 1).getRight() - (mRight - mLeft));
+    }
+
+    private void updateWallpaperOffset(int scrollRange) {
+        mWallpaperManager.setWallpaperOffsets(getWindowToken(), mScrollX / (float) scrollRange, 0);
+    }
+    
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             mScrollX = mScroller.getCurrX();
             mScrollY = mScroller.getCurrY();
+            updateWallpaperOffset();
             postInvalidate();
         } else if (mNextScreen != INVALID_SCREEN) {
             mCurrentScreen = Math.max(0, Math.min(mNextScreen, getChildCount() - 1));
@@ -484,7 +498,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
     @Override
     public boolean isOpaque() {
-        return !mWallpaper.hasAlpha();
+        return mWallpaper != null && !mWallpaper.hasAlpha();
     }
 
     @Override
@@ -517,7 +531,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
             x = mRight - mLeft - mWallpaperWidth;
         }
 
-        canvas.drawBitmap(mWallpaper, x, (mBottom - mTop - mWallpaperHeight) / 2, mPaint);
+        if (mWallpaper != null) {
+            canvas.drawBitmap(mWallpaper, x, (mBottom - mTop - mWallpaperHeight) / 2, mPaint);
+        }
 
         // ViewGroup.dispatchDraw() supports many features we don't need:
         // clip to padding, layout animation, animation listener, disappearing
@@ -584,6 +600,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
         if (mFirstLayout) {
             scrollTo(mCurrentScreen * width, 0);
+            updateWallpaperOffset(width * (getChildCount() - 1));
             mFirstLayout = false;
         }
     }
@@ -833,12 +850,14 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 if (deltaX < 0) {
                     if (mScrollX > 0) {
                         scrollBy(Math.max(-mScrollX, deltaX), 0);
+                        updateWallpaperOffset();
                     }
                 } else if (deltaX > 0) {
                     final int availableToScroll = getChildAt(getChildCount() - 1).getRight() -
                             mScrollX - getWidth();
                     if (availableToScroll > 0) {
                         scrollBy(Math.min(availableToScroll, deltaX), 0);
+                        updateWallpaperOffset();
                     }
                 }
             }
