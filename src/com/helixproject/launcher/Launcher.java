@@ -682,9 +682,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         Workspace workspace = mWorkspace;
         CellLayout cell = ((CellLayout) workspace.getChildAt(start));
 
-		// Faruq Disable first & last screen
-        float max = workspace.getChildCount() - 2;
-
         Rect r = new Rect();
         resources.getDrawable(R.drawable.preview_background).getPadding(r);
         int extraW = (int) ((r.left + r.right) * max);
