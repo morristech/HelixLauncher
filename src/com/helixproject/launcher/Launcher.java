@@ -1891,6 +1891,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         return mDesktopLocked;
     }
 
+	public void onDoubleTap() {
+		showPreviews(mHandleView, 0, mWorkspace.getChildCount());
+	}
+
     public boolean onLongClick(View v) {
         if (mDesktopLocked) {
             return false;

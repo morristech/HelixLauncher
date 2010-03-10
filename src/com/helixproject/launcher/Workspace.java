@@ -41,6 +41,9 @@ import android.os.Parcel;
 
 import java.util.ArrayList;
 
+// Faruq: new imports
+import android.util.Log;
+
 /**
  * The workspace is a wide area with a wallpaper and a finite number of screens. Each
  * screen contains a number of icons, folders or widgets the user can interact with.
@@ -116,7 +119,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
 	// Faruq: new properties
 	private int mScreenLoaded = 0;
-
+	private long lastTapTime = 0;
+	private static final long DOUBLE_TAP_TIME = 350;
+	
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -732,6 +737,20 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 mLastMotionX = x;
                 mLastMotionY = y;
                 mAllowLongPress = true;
+
+				// Faruq: Double tap
+				//Log.d("Launcher", "Tapped; Last tap: "+lastTapTime+"; Diff: "+(System.currentTimeMillis() - lastTapTime));
+				if (System.currentTimeMillis() - lastTapTime <= DOUBLE_TAP_TIME) {
+					//Log.d("Launcher", "Double tapped");
+					lastTapTime = 0;
+					
+					if (mLauncher != null) {
+						mLauncher.onDoubleTap();
+						return true;
+					}
+				}
+
+				lastTapTime = System.currentTimeMillis();
 
                 /*
                  * If being flinged and user touches the screen, initiate drag;
