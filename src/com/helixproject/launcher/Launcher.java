@@ -84,6 +84,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.DataInputStream;
 
+// Faruq: new imports
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
+
 /**
  * Default launcher application.
  */
@@ -99,11 +103,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static final int WALLPAPER_SCREENS_SPAN = 2;
 
     private static final int MENU_GROUP_ADD = 1;
+	// Faruq: Modified menu arrangements (removed redundant item)
     private static final int MENU_ADD = Menu.FIRST + 1;
     private static final int MENU_WALLPAPER_SETTINGS = MENU_ADD + 1;
-    private static final int MENU_SEARCH = MENU_WALLPAPER_SETTINGS + 1;
-    private static final int MENU_NOTIFICATIONS = MENU_SEARCH + 1;
-    private static final int MENU_SETTINGS = MENU_NOTIFICATIONS + 1;
+	private static final int MENU_LAUNCHER_SETTINGS = MENU_WALLPAPER_SETTINGS + 1;
+    private static final int MENU_SETTINGS = MENU_LAUNCHER_SETTINGS + 1;
 
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_LIVE_FOLDER = 4;
@@ -204,10 +208,16 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     private DesktopBinder mBinder;
 
+	// Faruq: new properties
+	private SharedPreferences mPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mInflater = getLayoutInflater();
+
+		// Faruq: initialize preference manager
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         mAppWidgetManager = AppWidgetManager.getInstance(this);
 
@@ -999,12 +1009,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         menu.add(0, MENU_WALLPAPER_SETTINGS, 0, R.string.menu_wallpaper)
                  .setIcon(android.R.drawable.ic_menu_gallery)
                  .setAlphabeticShortcut('W');
-        menu.add(0, MENU_SEARCH, 0, R.string.menu_search)
-                .setIcon(android.R.drawable.ic_search_category_default)
-                .setAlphabeticShortcut(SearchManager.MENU_KEY);
-        menu.add(0, MENU_NOTIFICATIONS, 0, R.string.menu_notifications)
-                .setIcon(com.android.internal.R.drawable.ic_menu_notifications)
-                .setAlphabeticShortcut('N');
+		// Faruq: Launcher settings
+		menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher)
+                 .setIcon(android.R.drawable.ic_menu_preferences)
+                 .setAlphabeticShortcut('L');
+		
 
         final Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
         settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -1036,12 +1045,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             case MENU_WALLPAPER_SETTINGS:
                 startWallpaper();
                 return true;
-            case MENU_SEARCH:
-                onSearchRequested();
-                return true;
-            case MENU_NOTIFICATIONS:
-                showNotifications();
-                return true;
+			// Faruq: removed redundant menu items
+			case MENU_LAUNCHER_SETTINGS:
+				startPreference();
+				return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -1270,6 +1277,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         final Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
         startActivity(Intent.createChooser(pickWallpaper, getString(R.string.chooser_wallpaper)));
     }
+
+	// Faruq: Start preference activity
+	private void startPreference() {
+		Intent intent = new Intent(this, LauncherPreferenceActivity.class);
+		startActivityIfNeeded(intent, -1);
+	}
 
     /**
      * Registers various intent receivers. The current implementation registers

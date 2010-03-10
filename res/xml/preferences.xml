@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/pref_screen_settings">
+  		<Preference android:key="pref_key_launcher_screen_size"
+	                    android:defaultValue="3"
+	                          android:title="@string/pref_title_launcher_screen_size"
+	                          android:summary="@string/pref_summary_launcher_screen_size" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_behavior_settings">
+    	<CheckBoxPreference android:key="pref_key_launcher_longpress_add"
+                        android:title="@string/pref_title_longpress_add"
+                        android:summary="@string/pref_summary_longpress_add"
+                        android:defaultValue="true" />
+		<CheckBoxPreference android:key="pref_key_launcher_auto_orientation"
+                        android:title="@string/pref_title_auto_orientation"
+                        android:summary="@string/pref_summary_auto_orientation"
+                        android:defaultValue="true" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_app_settings">
+		<PreferenceScreen android:key="pref_key_launcher_app_settings"
+	                      android:title="@string/pref_app_settings"
+	android:summary="@string/pref_summary_app_settings">
+						<EditTextPreference android:key="pref_key_launcher_app1_package"
+				                        android:title="@string/pref_title_app_package"
+				                        android:summary="@string/pref_summary_app_package"
+				                        android:defaultValue="com.android.contacts" />
+						<EditTextPreference android:key="pref_key_launcher_app1_class"
+				                        android:title="@string/pref_title_app_class"
+				                        android:summary="@string/pref_summary_app_class"
+				                        android:defaultValue="com.android.contacts.DialtactsActivity" />
+						<EditTextPreference android:key="pref_key_launcher_app1_uri"
+				                        android:title="@string/pref_title_app_uri"
+				                        android:summary="@string/pref_summary_app_uri"
+				                        android:defaultValue="" />
+						<EditTextPreference android:key="pref_key_launcher_app2_package"
+				                        android:title="@string/pref_title_app_package"
+				                        android:summary="@string/pref_summary_app_package"
+				                        android:defaultValue="com.android.mms" />
+						<EditTextPreference android:key="pref_key_launcher_app2_class"
+				                        android:title="@string/pref_title_app_class"
+				                        android:summary="@string/pref_summary_app_class"
+				                        android:defaultValue="com.android.mms.ui.ConversationList" />
+						<EditTextPreference android:key="pref_key_launcher_app2_uri"
+				                        android:title="@string/pref_title_app_uri"
+				                        android:summary="@string/pref_summary_app_uri"
+				                        android:defaultValue="" />
+						<EditTextPreference android:key="pref_key_launcher_app3_package"
+				                        android:title="@string/pref_title_app_package"
+				                        android:summary="@string/pref_summary_app_package"
+				                        android:defaultValue="com.android.browser" />
+						<EditTextPreference android:key="pref_key_launcher_app3_class"
+				                        android:title="@string/pref_title_app_class"
+				                        android:summary="@string/pref_summary_app_class"
+				                        android:defaultValue="com.android.browser.BrowserActivity" />
+						<EditTextPreference android:key="pref_key_launcher_app3_uri"
+				                        android:title="@string/pref_title_app_uri"
+				                        android:summary="@string/pref_summary_app_uri"
+				                        android:defaultValue="" />
+						<EditTextPreference android:key="pref_key_launcher_app4_package"
+				                        android:title="@string/pref_title_app_package"
+				                        android:summary="@string/pref_summary_app_package"
+				                        android:defaultValue="com.android.vending" />
+						<EditTextPreference android:key="pref_key_launcher_app4_class"
+				                        android:title="@string/pref_title_app_class"
+				                        android:summary="@string/pref_summary_app_class"
+				                        android:defaultValue="com.android.vending.AssetBrowserActivity" />
+						<EditTextPreference android:key="pref_key_launcher_app4_uri"
+				                        android:title="@string/pref_title_app_uri"
+				                        android:summary="@string/pref_summary_app_uri"
+				                        android:defaultValue="" />
+	    </PreferenceScreen>
+		<Preference	android:title="@string/pref_title_app_settings_2" android:summary="@string/pref_summary_app_settings_2" android:enabled="false" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_about">
+    	<Preference android:key="pref_key_launcher_version"
+	                      android:persistent="false"
+	                      android:summary="@string/pref_summary_launcher_author"
+	                      android:title="@string/pref_title_launcher_author" />
+		<Preference android:key="pref_key_launcher_version"
+	                      android:persistent="false"
+	                      android:summary="@string/pref_summary_launcher_version"
+	                      android:title="@string/pref_title_launcher_version" />
+		<Preference android:key="pref_key_launcher_restart"
+	                      android:persistent="false"
+	                      android:title="@string/pref_title_launcher_restart" />
+	</PreferenceCategory>
+</PreferenceScreen>

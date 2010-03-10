@@ -46,6 +46,7 @@
         android:label="@string/permlab_write_settings"
         android:description="@string/permdesc_write_settings"/>
 
+	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -87,6 +88,12 @@
                 <action android:name="android.intent.action.SET_WALLPAPER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+		<!-- Faruq: Preferences -->
+		<activity
+            android:name="LauncherPreferenceActivity"
+            android:label="@string/menu_launcher">
         </activity>
 
         <!-- Enable system-default search mode for any activity in Home -->
