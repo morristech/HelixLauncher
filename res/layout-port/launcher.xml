@@ -109,6 +109,7 @@
 
             android:focusable="true"
             android:clickable="true"
+			android:longClickable="true"
 
             android:scaleType="center"
             android:src="@drawable/handle_icon"
