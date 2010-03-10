@@ -1764,11 +1764,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         if (mWorkspace.allowLongPress()) {
             if (cellInfo.cell == null) {
-                if (cellInfo.valid) {
-                    // User long pressed on empty space
-                    mWorkspace.setAllowLongPress(false);
-                    showAddDialog(cellInfo);
-                }
+				// Faruq: Controlled by preferences
+				if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_LONGPRESS_ADD, true)) {
+                	if (cellInfo.valid) {
+	                    // User long pressed on empty space
+	                    mWorkspace.setAllowLongPress(false);
+	                    showAddDialog(cellInfo);
+	                }
+				}
             } else {
                 if (!(cellInfo.cell instanceof Folder)) {
                     // User long pressed on an item
