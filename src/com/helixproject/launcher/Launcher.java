@@ -88,6 +88,14 @@ import java.io.DataInputStream;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.widget.PopupWindow;
+import android.view.HapticFeedbackConstants;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 
 /**
  * Default launcher application.
@@ -562,6 +570,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         mHandleView = (HandleView) drawer.findViewById(R.id.all_apps);
         mHandleView.setLauncher(this);
+		mHandleView.setOnLongClickListener(this);
         mHandleIcon = (TransitionDrawable) mHandleView.getDrawable();
         mHandleIcon.setCrossFadeEnabled(true);
 
@@ -641,6 +650,137 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		}
 		editor.commit();
 	}
+	
+	// Faruq: Backported Previews from Launcher2
+	@SuppressWarnings({"unchecked"})
+    private void dismissPreview(final View v) {
+        final PopupWindow window = (PopupWindow) v.getTag();
+        if (window != null) {
+            window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    ViewGroup group = (ViewGroup) v.getTag(R.id.workspace);
+                    int count = group.getChildCount();
+                    for (int i = 0; i < count; i++) {
+                        ((ImageView) group.getChildAt(i)).setImageDrawable(null);
+                    }
+                    ArrayList<Bitmap> bitmaps = (ArrayList<Bitmap>) v.getTag(R.id.icon);
+                    for (Bitmap bitmap : bitmaps) bitmap.recycle();
+
+                    v.setTag(R.id.workspace, null);
+                    v.setTag(R.id.icon, null);
+                    window.setOnDismissListener(null);
+                }
+            });
+            window.dismiss();
+        }
+        v.setTag(null);
+    }
+
+	private void showPreviews(final View anchor, int start, int end) {
+        Resources resources = getResources();
+
+        Workspace workspace = mWorkspace;
+        CellLayout cell = ((CellLayout) workspace.getChildAt(start));
+
+		// Faruq Disable first & last screen
+        float max = workspace.getChildCount() - 2;
+
+        Rect r = new Rect();
+        resources.getDrawable(R.drawable.preview_background).getPadding(r);
+        int extraW = (int) ((r.left + r.right) * max);
+        int extraH = r.top + r.bottom;
+
+        int aW = cell.getWidth() - extraW;
+        float w = aW / max;
+
+        int width = cell.getWidth();
+        int height = cell.getHeight();
+        int x = cell.getLeftPadding();
+        int y = cell.getTopPadding();
+        width -= (x + cell.getRightPadding());
+        height -= (y + cell.getBottomPadding());
+
+        float scale = w / width;
+
+        int count = end - start;
+
+        final float sWidth = width * scale;
+        float sHeight = height * scale;
+
+        LinearLayout preview = new LinearLayout(this);
+
+        PreviewTouchHandler handler = new PreviewTouchHandler(anchor);
+        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>(count);
+
+        for (int i = start; i < end; i++) {
+            ImageView image = new ImageView(this);
+            cell = (CellLayout) workspace.getChildAt(i);
+
+            Bitmap bitmap = Bitmap.createBitmap((int) sWidth, (int) sHeight,
+                    Bitmap.Config.ARGB_8888);
+
+            Canvas c = new Canvas(bitmap);
+            c.scale(scale, scale);
+            c.translate(-cell.getLeftPadding(), -cell.getTopPadding());
+            cell.dispatchDraw(c);
+
+            image.setBackgroundDrawable(resources.getDrawable(R.drawable.preview_background));
+            image.setImageBitmap(bitmap);
+            image.setTag(i);
+            image.setOnClickListener(handler);
+            image.setOnFocusChangeListener(handler);
+            image.setFocusable(true);
+            if (i == mWorkspace.getCurrentScreen()) image.requestFocus();
+
+            preview.addView(image,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            bitmaps.add(bitmap);            
+        }
+
+        PopupWindow p = new PopupWindow(this);
+        p.setContentView(preview);
+        p.setWidth((int) (sWidth * count + extraW));
+        p.setHeight((int) (sHeight + extraH));
+        p.setAnimationStyle(R.style.AnimationPreview);
+        p.setOutsideTouchable(true);
+        p.setFocusable(true);
+        p.setBackgroundDrawable(new ColorDrawable(0));
+        p.showAsDropDown(anchor, 0, 0);
+
+        p.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            public void onDismiss() {
+                dismissPreview(anchor);
+            }
+        });
+
+        anchor.setTag(p);
+        anchor.setTag(R.id.workspace, preview);
+        anchor.setTag(R.id.icon, bitmaps);        
+    }
+
+    class PreviewTouchHandler implements View.OnClickListener, Runnable, View.OnFocusChangeListener {
+        private final View mAnchor;
+
+        public PreviewTouchHandler(View anchor) {
+            mAnchor = anchor;
+        }
+
+        public void onClick(View v) {
+            mWorkspace.snapToScreen((Integer) v.getTag());
+            v.post(this);
+        }
+
+        public void run() {
+            dismissPreview(mAnchor);            
+        }
+
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                mWorkspace.snapToScreen((Integer) v.getTag());
+            }
+        }
+    }
 
     /**
      * Creates a view representing a shortcut.
@@ -1812,6 +1952,16 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         if (mDesktopLocked) {
             return false;
         }
+
+		// Faruq: Added for long-press handle for previews
+		Log.d("HelixLauncher", "View below finger: "+v.getId()+" vs. "+R.id.all_apps);
+		switch (v.getId()) {
+			case R.id.all_apps:
+                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                showPreviews(v, 0, mWorkspace.getChildCount());
+            	return true;
+	    }
 
         if (!(v instanceof CellLayout)) {
             v = (View) v.getParent();

@@ -30,6 +30,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+// Faruq: new imports
+import android.graphics.Canvas;
+
 public class CellLayout extends ViewGroup {
     private boolean mPortrait;
 
@@ -97,6 +100,12 @@ public class CellLayout extends ViewGroup {
                 mOccupied = new boolean[mLongAxisCells][mShortAxisCells];
             }
         }
+    }
+
+	// Faruq: Backported
+	@Override
+    public void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
     }
 
     @Override
@@ -426,6 +435,31 @@ public class CellLayout extends ViewGroup {
 
         result[0] = hStartPadding + cellX * (mCellWidth + mWidthGap);
         result[1] = vStartPadding + cellY * (mCellHeight + mHeightGap);
+    }
+
+	// Faruq: Backported from Launcher2
+	int getCellWidth() {
+        return mCellWidth;
+    }
+
+    int getCellHeight() {
+        return mCellHeight;
+    }
+
+    int getLeftPadding() {
+        return mPortrait ? mShortAxisStartPadding : mLongAxisStartPadding;
+    }
+
+    int getTopPadding() {
+        return mPortrait ? mLongAxisStartPadding : mShortAxisStartPadding;        
+    }
+
+    int getRightPadding() {
+        return mPortrait ? mShortAxisEndPadding : mLongAxisEndPadding;
+    }
+
+    int getBottomPadding() {
+        return mPortrait ? mLongAxisEndPadding : mShortAxisEndPadding;        
     }
 
     @Override
