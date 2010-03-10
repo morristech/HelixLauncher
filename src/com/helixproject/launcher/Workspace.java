@@ -154,7 +154,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
      */
     private void initWorkspace() {
         mScroller = new Scroller(getContext());
-        mCurrentScreen = LAUNCHER.DEFAULT_SCREEN;
+        mCurrentScreen = Launcher.DEFAULT_SCREEN;
         Launcher.setScreen(mCurrentScreen);
 
         mPaint = new Paint();
