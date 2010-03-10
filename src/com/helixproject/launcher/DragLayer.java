@@ -35,6 +35,9 @@ import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
+// Faruq: new imports
+import java.util.ArrayList;
+
 /**
  * A ViewGroup that coordinated dragging across its dscendants
  */
@@ -93,7 +96,9 @@ public class DragLayer extends FrameLayout implements DragController {
 
     private final Vibrator mVibrator = new Vibrator();
 
-    private DragListener mListener;
+	// Faruq: utilize array list instead
+    private ArrayList<DragListener> mListener = new ArrayList<DragListener>();
+	//private DragListener mListener;
 
     private DragScroller mDragScroller;
 
@@ -147,6 +152,9 @@ public class DragLayer extends FrameLayout implements DragController {
 
     private InputMethodManager mInputMethodManager;
 
+	// Faruq: new properties
+	private final Paint mShortcutPaint = new Paint();
+
     /**
      * Used to create a new DragLayer from XML.
      *
@@ -157,7 +165,9 @@ public class DragLayer extends FrameLayout implements DragController {
         super(context, attrs);
 
         final int srcColor = context.getResources().getColor(R.color.delete_color_filter);
+		final int dropColor = context.getResources().getColor(R.color.shortcut_color_filter);
         mTrashPaint.setColorFilter(new PorterDuffColorFilter(srcColor, PorterDuff.Mode.SRC_ATOP));
+		mShortcutPaint.setColorFilter(new PorterDuffColorFilter(dropColor, PorterDuff.Mode.SRC_ATOP));
 
         // Make estimated paint area in gray
         int snagColor = context.getResources().getColor(R.color.snag_callout_color);
@@ -179,9 +189,13 @@ public class DragLayer extends FrameLayout implements DragController {
         }
         mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
 
-        if (mListener != null) {
+		// Faruq: ArrayList For Each
+		for (DragListener l : mListener) {
+			l.onDragStart(v, source, dragInfo, dragAction);
+		}
+        /*if (mListener != null) {
             mListener.onDragStart(v, source, dragInfo, dragAction);
-        }
+        }*/
 
         Rect r = mDragRect;
         r.set(v.getScrollX(), v.getScrollY(), 0, 0);
@@ -311,9 +325,13 @@ public class DragLayer extends FrameLayout implements DragController {
             if (mOriginator != null) {
                 mOriginator.setVisibility(VISIBLE);
             }
-            if (mListener != null) {
+			// Faruq: ArrayList For Each
+			for (DragListener l : mListener) {
+				l.onDragEnd();
+			}
+            /*if (mListener != null) {
                 mListener.onDragEnd();
-            }
+            }*/
         }
     }
 
@@ -472,6 +490,13 @@ public class DragLayer extends FrameLayout implements DragController {
                 }
             }
 
+			// Faruq: Set icon color for QuickShortcut
+			if (dropTarget != null && dropTarget instanceof QuickShortcut) {
+				mDragPaint = mShortcutPaint;
+			} else if (!mEnteredRegion) {
+				mDragPaint = null;
+			}
+
             if (!inDragRegion && x < SCROLL_ZONE) {
                 if (mScrollState == SCROLL_OUTSIDE_ZONE) {
                     mScrollState = SCROLL_WAITING_IN_ZONE;
@@ -580,12 +605,22 @@ public class DragLayer extends FrameLayout implements DragController {
         mDragScroller = scroller;
     }
 
-    public void setDragListener(DragListener l) {
+    /*public void setDragListener(DragListener l) {
         mListener = l;
     }
 
     public void removeDragListener(DragListener l) {
         mListener = null;
+    }*/
+
+	// Faruq: utilize array list instead
+	public void addDragListener(DragListener l) {
+        mListener.add(l);
+    }
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    public void removeDragListener(DragListener l) {
+        mListener.remove(l);
     }
 
     /**

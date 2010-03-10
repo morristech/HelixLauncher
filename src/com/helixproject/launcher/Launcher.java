@@ -579,6 +579,32 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         drawer.setOnDrawerCloseListener(drawerManager);
         drawer.setOnDrawerScrollListener(drawerManager);
 
+		final QuickShortcut qShortcut1 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_1);
+		final QuickShortcut qShortcut2 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_2);
+		final QuickShortcut qShortcut3 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_3);
+		final QuickShortcut qShortcut4 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_4);
+
+		qShortcut1.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, ""));
+		qShortcut2.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, ""));
+		qShortcut3.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, ""));
+		qShortcut4.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, ""));
+
+		qShortcut1.setLauncher(this);
+		qShortcut1.setDragController(dragLayer);
+		dragLayer.addDragListener(qShortcut1);
+
+		qShortcut2.setLauncher(this);
+		qShortcut2.setDragController(dragLayer);
+		dragLayer.addDragListener(qShortcut2);
+
+		qShortcut3.setLauncher(this);
+		qShortcut3.setDragController(dragLayer);
+		dragLayer.addDragListener(qShortcut3);
+
+		qShortcut4.setLauncher(this);
+		qShortcut4.setDragController(dragLayer);
+		dragLayer.addDragListener(qShortcut4);
+
         grid.setTextFilterEnabled(false);
         grid.setDragger(dragLayer);
         grid.setLauncher(this);
@@ -594,8 +620,36 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         dragLayer.setIgnoredDropTarget(grid);
         dragLayer.setDragScoller(workspace);
-        dragLayer.setDragListener(deleteZone);
+        dragLayer.addDragListener(deleteZone);
     }
+
+	public void saveBottomApp(int pos, String appName, String appClass, String uri) {
+		//Log.d(TAG, "Saving bottom app "+pos+": "+appName+"/"+appClass+"/ "+uri);
+		SharedPreferences.Editor editor = mPrefs.edit();
+		switch (pos) {
+			case 1:
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, appName);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, appClass);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, uri);
+				break;
+			case 2:
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, appName);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, appClass);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, uri);
+				break;
+			case 3:
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, appName);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, appClass);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, uri);
+				break;
+			case 4:
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, appName);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, appClass);
+				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, uri);
+				break;
+		}
+		editor.commit();
+	}
 
     /**
      * Creates a view representing a shortcut.

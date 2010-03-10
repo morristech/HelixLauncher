@@ -44,6 +44,52 @@
 
     </com.helixproject.launcher.Workspace>
 
+	<com.helixproject.launcher.QuickShortcut
+	        android:id="@+id/q_shortcut_1"
+	        android:layout_width="42dip"
+	        android:layout_height="42dip"
+			android:layout_gravity="bottom|left"
+	        android:layout_marginLeft="15dip"
+			launcher:direction="horizontal"
+			launcher:appNumber="1"
+
+			android:focusable="true"
+	        android:clickable="true"
+	 		/>
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_2"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+		android:layout_gravity="bottom|left"
+        android:layout_marginLeft="70dip"
+		launcher:direction="horizontal"
+		launcher:appNumber="2"
+
+		android:focusable="true"
+        android:clickable="true" />
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_3"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+		android:layout_gravity="bottom|right"
+        android:layout_marginRight="70dip"
+		launcher:direction="horizontal"
+		launcher:appNumber="3"
+
+		android:focusable="true"
+        android:clickable="true" />
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_4"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+		android:layout_gravity="bottom|right"
+        android:layout_marginRight="15dip"
+		launcher:direction="horizontal"
+		launcher:appNumber="4"
+
+		android:focusable="true"
+        android:clickable="true" />
+
     <SlidingDrawer
         android:id="@+id/drawer"
         android:layout_width="fill_parent"
