@@ -87,6 +87,7 @@ import java.io.DataInputStream;
 // Faruq: new imports
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 
 /**
  * Default launcher application.
@@ -420,6 +421,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     protected void onResume() {
         super.onResume();
+
+		if (Settings.System.getInt(this.getContentResolver(), "launcher_orientation", 1) == 0 ||
+			mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_AUTO_ORIENTATION, true) == false) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+		} else {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+		}
 
         if (mRestoring) {
             startLoaders();
