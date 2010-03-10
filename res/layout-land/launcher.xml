@@ -44,6 +44,51 @@
 
     </com.helixproject.launcher.Workspace>
 
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_1"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+        android:layout_gravity="top|right"
+		android:layout_marginTop="10dip"
+		launcher:direction="vertical"
+		launcher:appNumber="1"
+
+        android:focusable="true"
+        android:clickable="true" />
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_2"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+        android:layout_gravity="top|right"
+		android:layout_marginTop="60dip"
+		launcher:direction="vertical"
+		launcher:appNumber="2"
+
+        android:focusable="true"
+        android:clickable="true" />
+	<com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_3"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+        android:layout_gravity="bottom|right"
+		android:layout_marginBottom="60dip"
+		launcher:direction="vertical"
+		launcher:appNumber="3"
+
+        android:focusable="true"
+        android:clickable="true" />
+    <com.helixproject.launcher.QuickShortcut
+        android:id="@+id/q_shortcut_4"
+        android:layout_width="42dip"
+        android:layout_height="42dip"
+        android:layout_gravity="bottom|right"
+		android:layout_marginBottom="10dip"
+		launcher:direction="vertical"
+		launcher:appNumber="4"
+
+        android:focusable="true"
+        android:clickable="true" />
+
     <SlidingDrawer
         android:id="@+id/drawer"
         android:layout_width="fill_parent"
@@ -54,22 +99,22 @@
         android:bottomOffset="4dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
-        
-        <com.helixproject.launcher.HandleView
-            android:id="@id/all_apps"
-            android:layout_width="56dip"
-            android:layout_height="76dip"
+
+		<com.helixproject.launcher.HandleView
+	        android:id="@id/all_apps"
+	        android:layout_width="56dip"
+	        android:layout_height="76dip"
 			android:layout_gravity="right|center_vertical"
 
-            android:background="@drawable/handle"
+	        android:background="@drawable/handle"
 
-            android:focusable="true"
-            android:clickable="true"
+	        android:focusable="true"
+	        android:clickable="true"
 
-            android:scaleType="center"
-            android:src="@drawable/handle_icon"
+	        android:scaleType="center"
+	        android:src="@drawable/handle_icon"
 
-            launcher:direction="vertical" />
+	        launcher:direction="vertical" />
 
         <com.helixproject.launcher.AllAppsGridView
             android:id="@id/content"
