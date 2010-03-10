@@ -32,10 +32,10 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
 
     private DragController mDragger;
     private Launcher mLauncher;
-    private Bitmap mTexture;
-    private Paint mPaint;
-    private int mTextureWidth;
-    private int mTextureHeight;
+    //private Bitmap mTexture;
+    //private Paint mPaint;
+    //private int mTextureWidth;
+    //private int mTextureHeight;
 
     public AllAppsGridView(Context context) {
         super(context);
@@ -49,7 +49,7 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
         super(context, attrs, defStyle);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AllAppsGridView, defStyle, 0);
-        final int textureId = a.getResourceId(R.styleable.AllAppsGridView_texture, 0);
+        /*final int textureId = a.getResourceId(R.styleable.AllAppsGridView_texture, 0);
         if (textureId != 0) {
             mTexture = BitmapFactory.decodeResource(getResources(), textureId);
             mTextureWidth = mTexture.getWidth();
@@ -57,14 +57,14 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
 
             mPaint = new Paint();
             mPaint.setDither(false);
-        }
+        }*/
         a.recycle();
     }
 
-    @Override
+    /*@Override
     public boolean isOpaque() {
         return !mTexture.hasAlpha();
-    }
+    }*/
 
     @Override
     protected void onFinishInflate() {
@@ -72,7 +72,7 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
         setOnItemLongClickListener(this);
     }
 
-    @Override
+    /*@Override
     public void draw(Canvas canvas) {
         final Bitmap texture = mTexture;
         final Paint paint = mPaint;
@@ -96,7 +96,7 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
         }
 
         super.draw(canvas);
-    }
+    }*/
 
     public void onItemClick(AdapterView parent, View v, int position, long id) {
         ApplicationInfo app = (ApplicationInfo) parent.getItemAtPosition(position);
