@@ -49,15 +49,16 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
 
-        android:topOffset="5dip"
+        android:topOffset="-56dip"
         android:bottomOffset="4dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
 
         <com.helixproject.launcher.HandleView
             android:id="@id/all_apps"
-            android:layout_width="fill_parent"
+            android:layout_width="76dip"
             android:layout_height="56dip"
+			android:layout_gravity="bottom|center_horizontal"
 
             android:background="@drawable/handle"
 
@@ -92,7 +93,7 @@
 
     <com.helixproject.launcher.DeleteZone
         android:id="@+id/delete_zone"
-        android:layout_width="wrap_content"
+        android:layout_width="76dip"
         android:layout_height="49dip"
 
         android:scaleType="center"
