@@ -106,6 +106,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     int mDrawerContentHeight;
     int mDrawerContentWidth;
 
+	// Faruq: new properties
+	private int mScreenLoaded = 0;
+
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -153,7 +156,10 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         if (!(child instanceof CellLayout)) {
             throw new IllegalArgumentException("A Workspace can only have CellLayout children.");
         }
-        super.addView(child, index, params);
+		if (mScreenLoaded < Launcher.SCREEN_COUNT) {
+			mScreenLoaded++;
+        	super.addView(child, index, params);
+		}
     }
 
     @Override
