@@ -682,6 +682,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         Workspace workspace = mWorkspace;
         CellLayout cell = ((CellLayout) workspace.getChildAt(start));
 
+        float max = workspace.getChildCount();
+
         Rect r = new Rect();
         resources.getDrawable(R.drawable.preview_background).getPadding(r);
         int extraW = (int) ((r.left + r.right) * max);
