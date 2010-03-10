@@ -96,6 +96,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.graphics.PorterDuff;
 
 /**
  * Default launcher application.
@@ -1891,23 +1892,15 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
 	public void onDoubleTap() {
-		showPreviews(mHandleView, 0, mWorkspace.getChildCount());
+		if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_DOUBLE_TAP, true)) {
+			showPreviews(mHandleView, 0, mWorkspace.getChildCount());
+		}
 	}
 
     public boolean onLongClick(View v) {
         if (mDesktopLocked) {
             return false;
         }
-
-		// Faruq: Added for long-press handle for previews
-		Log.d("HelixLauncher", "View below finger: "+v.getId()+" vs. "+R.id.all_apps);
-		switch (v.getId()) {
-			case R.id.all_apps:
-                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
-                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
-                showPreviews(v, 0, mWorkspace.getChildCount());
-            	return true;
-	    }
 
         if (!(v instanceof CellLayout)) {
             v = (View) v.getParent();
