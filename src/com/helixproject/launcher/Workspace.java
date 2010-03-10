@@ -52,7 +52,8 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     /**
      * The velocity at which a fling gesture will cause us to snap to the next screen
      */
-    private static final int SNAP_VELOCITY = 1000;
+	// Faruq: Lesser force for fling to occur
+    private static final int SNAP_VELOCITY = 200;
 
     private int mDefaultScreen;
 
@@ -821,10 +822,10 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
                 if (velocityX > SNAP_VELOCITY && mCurrentScreen > 0) {
                     // Fling hard enough to move left
-                    snapToScreen(mCurrentScreen - 1);
+                    snapToScreen(mCurrentScreen - 1, velocityX);
                 } else if (velocityX < -SNAP_VELOCITY && mCurrentScreen < getChildCount() - 1) {
                     // Fling hard enough to move right
-                    snapToScreen(mCurrentScreen + 1);
+                    snapToScreen(mCurrentScreen + 1, velocityX);
                 } else {
                     snapToDestination();
                 }
@@ -851,7 +852,14 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     }
 
     void snapToScreen(int whichScreen) {
+        snapToScreen(whichScreen, 0);
+    }
+
+	void snapToScreen(int whichScreen, int velocityX) {
         if (!mScroller.isFinished()) return;
+
+		// Faruq: Make revert easing slower
+		int durationOffset = 0;
 
         clearVacantCache();
         enableChildrenCache();
@@ -865,11 +873,18 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         if (focusedChild != null && changingScreens && focusedChild == getChildAt(mCurrentScreen)) {
             focusedChild.clearFocus();
         }
+
+		if (!changingScreens) durationOffset = 600;
         
         final int newX = whichScreen * getWidth();
         final int delta = newX - mScrollX;
-        mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2);
-        invalidate();
+
+		// Faruq: Velocity Scrolling
+		if (velocityX == 0) 
+        	mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2 + durationOffset);
+    	else
+			mScroller.startScroll(mScrollX, 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
+		invalidate();
     }
 
     void startDrag(CellLayout.CellInfo cellInfo) {
