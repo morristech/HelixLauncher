@@ -21,7 +21,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.helixproject.launcher">
 
-    <permission
+    <!--<permission
         android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
@@ -44,7 +44,7 @@
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_write_settings"
-        android:description="@string/permdesc_write_settings"/>
+        android:description="@string/permdesc_write_settings"/> -->
 
 	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -61,7 +61,6 @@
 
     <application
         android:name="LauncherApplication"
-        android:process="android.process.acore"
         android:label="@string/application_name"
         android:icon="@drawable/ic_launcher_home">
 
