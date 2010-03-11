@@ -1893,6 +1893,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 	public void onDoubleTap() {
 		if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_DOUBLE_TAP, true)) {
+			mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+			                            HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
 			showPreviews(mHandleView, 0, mWorkspace.getChildCount());
 		}
 	}
