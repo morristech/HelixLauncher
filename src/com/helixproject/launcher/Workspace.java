@@ -120,7 +120,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 	// Faruq: new properties
 	private int mScreenLoaded = 0;
 	private long lastTapTime = 0;
-	private static final long DOUBLE_TAP_TIME = 350;
+	private static final long DOUBLE_TAP_TIME = 250;
 	
     /**
      * Used to inflate the Workspace from XML.
@@ -730,6 +730,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                         final View currentScreen = getChildAt(mCurrentScreen);
                         currentScreen.cancelLongPress();
                     }
+
+					// Faruq: Cancel any double taps
+					lastTapTime = 0;
                 }
                 break;
 
@@ -745,7 +748,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 					//Log.d("Launcher", "Double tapped");
 					lastTapTime = 0;
 					
-					if (mLauncher != null) {
+					if (mLauncher != null && mScroller.isFinished()) {
 						mLauncher.onDoubleTap();
 						return true;
 					}
