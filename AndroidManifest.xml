@@ -24,25 +24,25 @@
     android:sharedUserLabel="@string/uid_name">
 
     <permission
-        android:name="com.helixproject.launcher.permission.INSTALL_SHORTCUT"
+        android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_install_shortcut"
         android:description="@string/permdesc_install_shortcut" />
     <permission
-        android:name="com.helixproject.launcher.permission.UNINSTALL_SHORTCUT"
+        android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_uninstall_shortcut"
         android:description="@string/permdesc_uninstall_shortcut"/>
     <permission
-        android:name="com.helixproject.launcher.permission.READ_SETTINGS"
+        android:name="com.android.launcher.permission.READ_SETTINGS"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_read_settings"
         android:description="@string/permdesc_read_settings"/>
     <permission
-        android:name="com.helixproject.launcher.permission.WRITE_SETTINGS"
+        android:name="com.android.launcher.permission.WRITE_SETTINGS"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_write_settings"
@@ -58,8 +58,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.BIND_APPWIDGET" />
-    <uses-permission android:name="com.helixproject.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.helixproject.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
 
     <application
         android:name="LauncherApplication"
@@ -108,18 +108,18 @@
         <!-- Intent received used to install shortcuts from other applications -->
         <receiver
             android:name=".InstallShortcutReceiver"
-            android:permission="com.helixproject.launcher.permission.INSTALL_SHORTCUT">
+            android:permission="com.android.launcher.permission.INSTALL_SHORTCUT">
             <intent-filter>
-                <action android:name="com.helixproject.launcher.action.INSTALL_SHORTCUT" />
+                <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
             </intent-filter>
         </receiver>
 
         <!-- Intent received used to uninstall shortcuts from other applications -->
         <receiver
             android:name=".UninstallShortcutReceiver"
-            android:permission="com.helixproject.launcher.permission.UNINSTALL_SHORTCUT">
+            android:permission="com.android.launcher.permission.UNINSTALL_SHORTCUT">
             <intent-filter>
-                <action android:name="com.helixproject.launcher.action.UNINSTALL_SHORTCUT" />
+                <action android:name="com.android.launcher.action.UNINSTALL_SHORTCUT" />
             </intent-filter>
         </receiver>
 
@@ -127,8 +127,8 @@
         <provider
             android:name="LauncherProvider"
             android:authorities="com.helixproject.launcher.settings"
-            android:writePermission="com.helixproject.launcher.permission.WRITE_SETTINGS"
-            android:readPermission="com.helixproject.launcher.permission.READ_SETTINGS" />
+            android:writePermission="com.android.launcher.permission.WRITE_SETTINGS"
+            android:readPermission="com.android.launcher.permission.READ_SETTINGS" />
 
     </application>
 </manifest>
