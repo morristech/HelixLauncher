@@ -676,6 +676,16 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+				// Faruq: Fix LWP interactivity
+				if (mTouchState != TOUCH_STATE_SCROLLING) {
+                    final CellLayout currentScreen = (CellLayout)getChildAt(mCurrentScreen);
+                    if (!currentScreen.lastDownOnOccupiedCell()) {
+                        // Send a tap to the wallpaper if the last down was on empty space
+                        mWallpaperManager.sendWallpaperCommand(getWindowToken(), 
+                                "android.wallpaper.tap", (int) ev.getX(), (int) ev.getY(), 0, null);
+                    }
+                }
+				
                 // Release the drag
                 clearChildrenCache();
                 mTouchState = TOUCH_STATE_REST;

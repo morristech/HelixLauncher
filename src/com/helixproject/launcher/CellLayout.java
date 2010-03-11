@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 // Faruq: new imports
+import android.app.WallpaperManager;
 import android.graphics.Canvas;
 
 public class CellLayout extends ViewGroup {
@@ -61,6 +62,10 @@ public class CellLayout extends ViewGroup {
     private RectF mDragRect = new RectF();
 
     private boolean mDirtyTag;
+
+	// Faruq: Backport LWP interactive fix
+	private boolean mLastDownOnOccupiedCell = false;
+	private final WallpaperManager mWallpaperManager; 
 
     public CellLayout(Context context) {
         this(context, null);
@@ -100,6 +105,8 @@ public class CellLayout extends ViewGroup {
                 mOccupied = new boolean[mLongAxisCells][mShortAxisCells];
             }
         }
+
+		mWallpaperManager = WallpaperManager.getInstance(getContext());
     }
 
 	// Faruq: Backported
@@ -185,6 +192,8 @@ public class CellLayout extends ViewGroup {
                     }
                 }
             }
+
+			mLastDownOnOccupiedCell = found;
 
             if (!found) {
                 int cellXY[] = mCellXY;
@@ -557,6 +566,14 @@ public class CellLayout extends ViewGroup {
                 int childLeft = lp.x;
                 int childTop = lp.y;
                 child.layout(childLeft, childTop, childLeft + lp.width, childTop + lp.height);
+				
+				// Faruq: Backported LWP drop effect
+				if (lp.dropped) {
+					lp.dropped = false;
+
+					mWallpaperManager.sendWallpaperCommand(getWindowToken(), "android.home.drop",
+					childLeft + lp.width / 2, childTop + lp.height / 2, 0, null);
+				}
             }
         }
     }
@@ -645,6 +662,7 @@ public class CellLayout extends ViewGroup {
             lp.cellX = targetXY[0];
             lp.cellY = targetXY[1];
             lp.isDragging = false;
+			lp.dropped = true;
             mDragRect.setEmpty();
             child.requestLayout();
             invalidate();
@@ -830,6 +848,8 @@ out:            for (int i = x; i < x + spanX - 1 && x < xCount; i++) {
         int y;
 
         boolean regenerateId;
+
+		boolean dropped;
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
@@ -1029,6 +1049,10 @@ out:            for (int i = x; i < x + spanX - 1 && x < xCount; i++) {
                     ", y=" + cellY + "]";
         }
     }
+
+	public boolean lastDownOnOccupiedCell() {
+		return mLastDownOnOccupiedCell;
+	}
 }
 
 
