@@ -119,7 +119,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static final int MENU_ADD = Menu.FIRST + 1;
     private static final int MENU_WALLPAPER_SETTINGS = MENU_ADD + 1;
     private static final int MENU_LAUNCHER_SETTINGS = MENU_WALLPAPER_SETTINGS + 1;
-    private static final int MENU_SETTINGS = MENU_LAUNCHER_SETTINGS + 1;
+	private static final int MENU_NOTIFICATIONS = MENU_LAUNCHER_SETTINGS + 1;
+    private static final int MENU_SETTINGS = MENU_NOTIFICATIONS + 1;
 
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_LIVE_FOLDER = 4;
@@ -1301,7 +1302,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher)
                  .setIcon(android.R.drawable.ic_menu_preferences)
                  .setAlphabeticShortcut('L');
-        
+        menu.add(0, MENU_NOTIFICATIONS, 0, R.string.menu_notifications)
+                .setIcon(com.android.internal.R.drawable.ic_menu_notifications)
+                .setAlphabeticShortcut('N');
 
         final Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
         settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -1334,6 +1337,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 return true;
             case MENU_WALLPAPER_SETTINGS:
                 startWallpaper();
+                return true;
+			case MENU_NOTIFICATIONS:
+                showNotifications();
                 return true;
             // Faruq: removed redundant menu items
             case MENU_LAUNCHER_SETTINGS:
