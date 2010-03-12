@@ -30,6 +30,14 @@ import android.view.animation.AlphaAnimation;
 import android.graphics.RectF;
 import android.graphics.drawable.TransitionDrawable;
 
+// Faruq: new imports
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.util.Log;
+import android.view.HapticFeedbackConstants;
+
 public class DeleteZone extends ImageView implements DropTarget, DragController.DragListener {
     private static final int ORIENTATION_HORIZONTAL = 1;
     private static final int TRANSITION_DURATION = 250;
@@ -51,6 +59,11 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
     private final RectF mRegion = new RectF();
     private TransitionDrawable mTransition;
     private View mHandle;
+
+	// Faruq: new properties
+	private long deleteTimer = 0;
+	private boolean uninstallMode = false;
+	private static long UNINSTALL_TIME = 2000;
 
     public DeleteZone(Context context) {
         super(context);
@@ -119,15 +132,48 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
     public void onDragEnter(DragSource source, int x, int y, int xOffset, int yOffset,
             Object dragInfo) {
         mTransition.reverseTransition(TRANSITION_DURATION);
+		deleteTimer = System.currentTimeMillis();
+		uninstallMode = false;
+		//Log.d("DeleteZone", "Item is just over Trash");
     }
 
     public void onDragOver(DragSource source, int x, int y, int xOffset, int yOffset,
             Object dragInfo) {
+		if (System.currentTimeMillis() - deleteTimer >= UNINSTALL_TIME && !uninstallMode && ((ItemInfo)dragInfo).itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION) {
+			Log.d("DeleteZone", "Dropping turned to uninstall");
+			performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+			uninstallMode = true;
+		}
+
+		// Faruq: Modified from AdvancedLauncher
+		if (uninstallMode && (System.currentTimeMillis() - deleteTimer >= UNINSTALL_TIME+1000) && dragInfo instanceof ApplicationInfo) {
+			String pkg = null;
+			
+			final ApplicationInfo app = (ApplicationInfo) dragInfo;
+ 
+			if(app.iconResource != null) {
+				pkg = app.iconResource.packageName;
+			} else {
+				PackageManager mgr = getContext().getPackageManager();
+				ResolveInfo res = mgr.resolveActivity(app.intent, 0);
+				pkg = res.activityInfo.packageName;
+			}
+			
+			Log.d("DeleteZone", "Uninstalling application "+pkg);
+			Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:"+pkg));
+			getContext().startActivity(uninstallIntent);
+			
+			uninstallMode = false;
+		}
+		//Log.d("DeleteZone", "Item is over Trash");
     }
 
     public void onDragExit(DragSource source, int x, int y, int xOffset, int yOffset,
             Object dragInfo) {
         mTransition.reverseTransition(TRANSITION_DURATION);
+		deleteTimer = 0;
+		uninstallMode = false;
     }
 
     public void onDragStart(View v, DragSource source, Object info, int dragAction) {
