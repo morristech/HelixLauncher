@@ -35,11 +35,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.MotionEvent;
 import android.util.Log;
+import java.io.File;
 
 
 public class QuickShortcut extends ImageView implements View.OnClickListener, View.OnLongClickListener, DropTarget, DragController.DragListener {
@@ -134,8 +138,8 @@ public class QuickShortcut extends ImageView implements View.OnClickListener, Vi
 		}	
 		uri = ((ApplicationInfo)item).intent.toUri(0);
 
-		setApp(appName, appClass, uri);
-		mLauncher.saveBottomApp(appNumber, appName, appClass, uri);
+		mLauncher.saveBottomApp(appNumber, appName, appClass, uri, ((ApplicationInfo)item).icon);
+        setApp(appName, appClass, uri);
 
 		//Log.d("Launcher2/QSApp", "Dropped app "+packageName+" with uri "+((ApplicationInfo)item).intent.toUri(0));
 
@@ -186,36 +190,47 @@ public class QuickShortcut extends ImageView implements View.OnClickListener, Vi
     }
 
 	public void setApp(String appName, String appClass, String uri) {
-		if ((appName.length() != 0 && appClass.length() != 0) || uri.length() != 0) {
-			packageName = appName;
-			if (uri.length() > 0) {
-				try {
-					intent = Intent.parseUri(uri, 0);
-				} catch (Exception e) {
+        if ((appName.length() != 0 && appClass.length() != 0) || uri.length() != 0) {
+            packageName = appName;
+            if (uri.length() > 0) {
+                try {
+                    intent = Intent.parseUri(uri, 0);
+                } catch (Exception e) {
+                }
+                
+                if (appClass.length() != 0)
+                    intent.setClassName(appName, appClass);
+            } else {
+                intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName(appName, appClass);
+            }
+            
+            //Log.d("Launcher2/QSApp", "Set intent: "+intent);
+			Drawable icon = null;
+			
+			try {
+				Bitmap bitmap = BitmapFactory.decodeFile(Launcher.CUSTOM_ICONS_FOLDER+appNumber+".png");
+            	if (bitmap != null) {
+					icon = new FastBitmapDrawable(bitmap);
+				} else {
+					icon = pm.getActivityIcon(intent);
 				}
 
-				if (appClass.length() != 0)
-					intent.setClassName(appName, appClass);
-			} else {
-				intent = new Intent(Intent.ACTION_MAIN);
-				intent.setClassName(appName, appClass);
-			}
-
-			//Log.d("Launcher2/QSApp", "Set intent: "+intent);
-
-			try {
-				this.setImageDrawable(pm.getActivityIcon(intent));
-			} catch(Exception e) {}
-
-			setFocusable(true);
-
-		} else {
-			this.setImageDrawable(null);
-			packageName = null;
-			intent = null;
-			setFocusable(false);
-		}
-	}
+	        } catch (Exception e) {
+	        }
+            
+			this.setImageDrawable(icon);
+            setFocusable(true);
+            
+        } else {
+            this.setImageDrawable(null);
+			File file = new File(Launcher.CUSTOM_ICONS_FOLDER+appNumber+".png");
+			if (file.exists()) file.delete();
+            packageName = null;
+            intent = null;
+            setFocusable(false);
+        }
+    }
 
 	public void onClick(View v) {
 		if (intent != null) {

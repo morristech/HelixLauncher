@@ -97,6 +97,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.graphics.PorterDuff;
+import android.graphics.Bitmap;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 
 /**
  * Default launcher application.
@@ -218,6 +222,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     // Faruq: new properties
     private SharedPreferences mPrefs;
+	public static String CUSTOM_ICONS_FOLDER = "/data/data/com.helixproject.launcher/icons/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,6 +250,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         setWallpaperDimension();
 
         setContentView(R.layout.launcher);
+
+		// Faruq: Create custom icon folders if non-existent
+		File file = new File(Launcher.CUSTOM_ICONS_FOLDER);
+		if (!file.exists()) file.mkdirs();
+		
         setupViews();
 
         registerIntentReceivers();
@@ -624,10 +634,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         dragLayer.addDragListener(deleteZone);
     }
 
-    public void saveBottomApp(int pos, String appName, String appClass, String uri) {
+    public void saveBottomApp(int appNumber, String appName, String appClass, String uri) {
         //Log.d(TAG, "Saving bottom app "+pos+": "+appName+"/"+appClass+"/ "+uri);
         SharedPreferences.Editor editor = mPrefs.edit();
-        switch (pos) {
+        switch (appNumber) {
             case 1:
                 editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, appName);
                 editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, appClass);
@@ -650,6 +660,26 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 break;
         }
         editor.commit();
+    }
+
+	public void saveBottomApp(int appNumber, String appName, String appClass, String uri, Drawable icon) {
+		// Faruq: Compress bitmap
+		if (icon != null && icon instanceof FastBitmapDrawable) {
+			Bitmap bitmap = ((FastBitmapDrawable) icon).getBitmap();
+
+			try {
+                FileOutputStream out = new FileOutputStream(Launcher.CUSTOM_ICONS_FOLDER+appNumber+".png");
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+             } catch (FileNotFoundException e) {
+                     Log.d("QuickShortcuts Custom Icon", "Could not write icon: "+e);
+             }
+        } else {
+			// Faruq: Remove possible icon
+			File file = new File(Launcher.CUSTOM_ICONS_FOLDER+appNumber+".png");
+			if (file.exists()) file.delete();
+		}
+
+        saveBottomApp(appNumber, appName, appClass, uri);
     }
     
     // Faruq: Backported Previews from Launcher2
