@@ -49,7 +49,8 @@
 	        android:layout_width="42dip"
 	        android:layout_height="42dip"
 			android:layout_gravity="bottom|left"
-	        android:layout_marginLeft="15dip"
+	        android:layout_marginLeft="20dip"
+			android:layout_marginBottom="10dip"
 			launcher:direction="horizontal"
 			launcher:appNumber="1"
 
@@ -61,7 +62,8 @@
         android:layout_width="42dip"
         android:layout_height="42dip"
 		android:layout_gravity="bottom|left"
-        android:layout_marginLeft="70dip"
+        android:layout_marginLeft="80dip"
+		android:layout_marginBottom="10dip"
 		launcher:direction="horizontal"
 		launcher:appNumber="2"
 
@@ -72,7 +74,8 @@
         android:layout_width="42dip"
         android:layout_height="42dip"
 		android:layout_gravity="bottom|right"
-        android:layout_marginRight="70dip"
+        android:layout_marginRight="80dip"
+		android:layout_marginBottom="10dip"
 		launcher:direction="horizontal"
 		launcher:appNumber="3"
 
@@ -83,7 +86,8 @@
         android:layout_width="42dip"
         android:layout_height="42dip"
 		android:layout_gravity="bottom|right"
-        android:layout_marginRight="15dip"
+        android:layout_marginRight="20dip"
+		android:layout_marginBottom="10dip"
 		launcher:direction="horizontal"
 		launcher:appNumber="4"
 
@@ -96,7 +100,7 @@
         android:layout_height="fill_parent"
 
         android:topOffset="-56dip"
-        android:bottomOffset="4dip"
+        android:bottomOffset="0dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
 
@@ -106,14 +110,12 @@
             android:layout_height="56dip"
 			android:layout_gravity="bottom|center_horizontal"
 
-            android:background="@drawable/handle"
-
             android:focusable="true"
             android:clickable="true"
 			android:longClickable="true"
 
             android:scaleType="center"
-            android:src="@drawable/handle_icon"
+            android:src="@drawable/all_apps_button"
 
             launcher:direction="horizontal" />
 
@@ -142,9 +144,9 @@
         android:id="@+id/delete_zone"
         android:layout_width="76dip"
         android:layout_height="49dip"
+		android:layout_marginBottom="6dip"
 
         android:scaleType="center"
-        android:src="@drawable/ic_delete"
         android:background="@drawable/delete_zone_selector"
 
         android:layout_gravity="bottom|center_horizontal"

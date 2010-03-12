@@ -111,10 +111,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static final boolean DEBUG_USER_INTERFACE = false;
 
     private static final int MENU_GROUP_ADD = 1;
-	// Faruq: Modified menu arrangements (removed redundant item)
+    // Faruq: Modified menu arrangements (removed redundant item)
     private static final int MENU_ADD = Menu.FIRST + 1;
     private static final int MENU_WALLPAPER_SETTINGS = MENU_ADD + 1;
-	private static final int MENU_LAUNCHER_SETTINGS = MENU_WALLPAPER_SETTINGS + 1;
+    private static final int MENU_LAUNCHER_SETTINGS = MENU_WALLPAPER_SETTINGS + 1;
     private static final int MENU_SETTINGS = MENU_LAUNCHER_SETTINGS + 1;
 
     private static final int REQUEST_CREATE_SHORTCUT = 1;
@@ -131,7 +131,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     static final String SEARCH_WIDGET = "search_widget";
 
     static final int WALLPAPER_SCREENS_SPAN = 2;
-	// Faruq: Modifiable screen size
+    // Faruq: Modifiable screen size
     static int SCREEN_COUNT = 3;
     static int DEFAULT_SCREEN = 2;
     static final int NUMBER_CELLS_X = 4;
@@ -195,7 +195,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private FolderInfo mFolderInfo;
 
     private SlidingDrawer mDrawer;
-    private TransitionDrawable mHandleIcon;
+    //private TransitionDrawable mHandleIcon;
     private HandleView mHandleView;
     private AllAppsGridView mAllAppsGrid;
 
@@ -216,21 +216,21 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     private DesktopBinder mBinder;
 
-	// Faruq: new properties
-	private SharedPreferences mPrefs;
+    // Faruq: new properties
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mInflater = getLayoutInflater();
 
-		// Faruq: initialize preference manager
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		// Faruq: Get screen settings
-		Launcher.SCREEN_COUNT = mPrefs.getInt(LauncherPreferenceActivity.LAUNCHER_SCREEN_SIZE, 3);
-		Launcher.DEFAULT_SCREEN = (Launcher.SCREEN_COUNT - 1) / 2;
-		Launcher.sScreen = Launcher.DEFAULT_SCREEN;
+        // Faruq: initialize preference manager
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        // Faruq: Get screen settings
+        Launcher.SCREEN_COUNT = mPrefs.getInt(LauncherPreferenceActivity.LAUNCHER_SCREEN_SIZE, 3);
+        Launcher.DEFAULT_SCREEN = (Launcher.SCREEN_COUNT - 1) / 2;
+        Launcher.sScreen = Launcher.DEFAULT_SCREEN;
 
         mAppWidgetManager = AppWidgetManager.getInstance(this);
 
@@ -423,12 +423,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     protected void onResume() {
         super.onResume();
 
-		if (Settings.System.getInt(this.getContentResolver(), "launcher_orientation", 1) == 0 ||
-			mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_AUTO_ORIENTATION, true) == false) {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-		} else {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		}
+        if (Settings.System.getInt(this.getContentResolver(), "launcher_orientation", 1) == 0 ||
+            mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_AUTO_ORIENTATION, true) == false) {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        } else {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+        }
 
         if (mRestoring) {
             startLoaders();
@@ -571,9 +571,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         mHandleView = (HandleView) drawer.findViewById(R.id.all_apps);
         mHandleView.setLauncher(this);
-		mHandleView.setOnLongClickListener(this);
-        mHandleIcon = (TransitionDrawable) mHandleView.getDrawable();
-        mHandleIcon.setCrossFadeEnabled(true);
+        mHandleView.setOnLongClickListener(this);
+        //mHandleIcon = (TransitionDrawable) mHandleView.getDrawable();
+        //mHandleIcon.setCrossFadeEnabled(true);
 
         drawer.lock();
         final DrawerManager drawerManager = new DrawerManager();
@@ -581,31 +581,31 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         drawer.setOnDrawerCloseListener(drawerManager);
         drawer.setOnDrawerScrollListener(drawerManager);
 
-		final QuickShortcut qShortcut1 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_1);
-		final QuickShortcut qShortcut2 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_2);
-		final QuickShortcut qShortcut3 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_3);
-		final QuickShortcut qShortcut4 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_4);
+        final QuickShortcut qShortcut1 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_1);
+        final QuickShortcut qShortcut2 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_2);
+        final QuickShortcut qShortcut3 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_3);
+        final QuickShortcut qShortcut4 = (QuickShortcut) dragLayer.findViewById(R.id.q_shortcut_4);
 
-		qShortcut1.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, ""));
-		qShortcut2.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, ""));
-		qShortcut3.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, ""));
-		qShortcut4.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, ""));
+        qShortcut1.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, ""));
+        qShortcut2.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, ""));
+        qShortcut3.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, ""));
+        qShortcut4.setApp(mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, ""), mPrefs.getString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, ""));
 
-		qShortcut1.setLauncher(this);
-		qShortcut1.setDragController(dragLayer);
-		dragLayer.addDragListener(qShortcut1);
+        qShortcut1.setLauncher(this);
+        qShortcut1.setDragController(dragLayer);
+        dragLayer.addDragListener(qShortcut1);
 
-		qShortcut2.setLauncher(this);
-		qShortcut2.setDragController(dragLayer);
-		dragLayer.addDragListener(qShortcut2);
+        qShortcut2.setLauncher(this);
+        qShortcut2.setDragController(dragLayer);
+        dragLayer.addDragListener(qShortcut2);
 
-		qShortcut3.setLauncher(this);
-		qShortcut3.setDragController(dragLayer);
-		dragLayer.addDragListener(qShortcut3);
+        qShortcut3.setLauncher(this);
+        qShortcut3.setDragController(dragLayer);
+        dragLayer.addDragListener(qShortcut3);
 
-		qShortcut4.setLauncher(this);
-		qShortcut4.setDragController(dragLayer);
-		dragLayer.addDragListener(qShortcut4);
+        qShortcut4.setLauncher(this);
+        qShortcut4.setDragController(dragLayer);
+        dragLayer.addDragListener(qShortcut4);
 
         grid.setTextFilterEnabled(false);
         grid.setDragger(dragLayer);
@@ -624,36 +624,36 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         dragLayer.addDragListener(deleteZone);
     }
 
-	public void saveBottomApp(int pos, String appName, String appClass, String uri) {
-		//Log.d(TAG, "Saving bottom app "+pos+": "+appName+"/"+appClass+"/ "+uri);
-		SharedPreferences.Editor editor = mPrefs.edit();
-		switch (pos) {
-			case 1:
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, appName);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, appClass);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, uri);
-				break;
-			case 2:
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, appName);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, appClass);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, uri);
-				break;
-			case 3:
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, appName);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, appClass);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, uri);
-				break;
-			case 4:
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, appName);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, appClass);
-				editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, uri);
-				break;
-		}
-		editor.commit();
-	}
-	
-	// Faruq: Backported Previews from Launcher2
-	@SuppressWarnings({"unchecked"})
+    public void saveBottomApp(int pos, String appName, String appClass, String uri) {
+        //Log.d(TAG, "Saving bottom app "+pos+": "+appName+"/"+appClass+"/ "+uri);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        switch (pos) {
+            case 1:
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_PACKAGE, appName);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_CLASS, appClass);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP1_URI, uri);
+                break;
+            case 2:
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_PACKAGE, appName);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_CLASS, appClass);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP2_URI, uri);
+                break;
+            case 3:
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_PACKAGE, appName);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_CLASS, appClass);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP3_URI, uri);
+                break;
+            case 4:
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_PACKAGE, appName);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_CLASS, appClass);
+                editor.putString(LauncherPreferenceActivity.LAUNCHER_APP4_URI, uri);
+                break;
+        }
+        editor.commit();
+    }
+    
+    // Faruq: Backported Previews from Launcher2
+    @SuppressWarnings({"unchecked"})
     private void dismissPreview(final View v) {
         final PopupWindow window = (PopupWindow) v.getTag();
         if (window != null) {
@@ -677,7 +677,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         v.setTag(null);
     }
 
-	private void showPreviews(final View anchor, int start, int end) {
+    private void showPreviews(final View anchor, int start, int end) {
         Resources resources = getResources();
 
         Workspace workspace = mWorkspace;
@@ -1267,11 +1267,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         menu.add(0, MENU_WALLPAPER_SETTINGS, 0, R.string.menu_wallpaper)
                  .setIcon(android.R.drawable.ic_menu_gallery)
                  .setAlphabeticShortcut('W');
-		// Faruq: Launcher settings
-		menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher)
+        // Faruq: Launcher settings
+        menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher)
                  .setIcon(android.R.drawable.ic_menu_preferences)
                  .setAlphabeticShortcut('L');
-		
+        
 
         final Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
         settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -1305,10 +1305,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             case MENU_WALLPAPER_SETTINGS:
                 startWallpaper();
                 return true;
-			// Faruq: removed redundant menu items
-			case MENU_LAUNCHER_SETTINGS:
-				startPreference();
-				return true;
+            // Faruq: removed redundant menu items
+            case MENU_LAUNCHER_SETTINGS:
+                startPreference();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -1549,11 +1549,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         startActivity(chooser);
     }
 
-	// Faruq: Start preference activity
-	private void startPreference() {
-		Intent intent = new Intent(this, LauncherPreferenceActivity.class);
-		startActivityIfNeeded(intent, -1);
-	}
+    // Faruq: Start preference activity
+    private void startPreference() {
+        Intent intent = new Intent(this, LauncherPreferenceActivity.class);
+        startActivityIfNeeded(intent, -1);
+    }
 
     /**
      * Registers various intent receivers. The current implementation registers
@@ -1948,13 +1948,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         return mDesktopLocked;
     }
 
-	public void onDoubleTap() {
-		if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_DOUBLE_TAP, true)) {
-			mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
-			                            HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
-			showPreviews(mHandleView, 0, mWorkspace.getChildCount());
-		}
-	}
+    public void onDoubleTap() {
+        if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_DOUBLE_TAP, true)) {
+            mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            showPreviews(mHandleView, 0, mWorkspace.getChildCount());
+        }
+    }
 
     public boolean onLongClick(View v) {
         if (mDesktopLocked) {
@@ -1974,14 +1974,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         if (mWorkspace.allowLongPress()) {
             if (cellInfo.cell == null) {
-				// Faruq: Controlled by preferences
-				if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_LONGPRESS_ADD, true)) {
-                	if (cellInfo.valid) {
-	                    // User long pressed on empty space
-	                    mWorkspace.setAllowLongPress(false);
-	                    showAddDialog(cellInfo);
-	                }
-				}
+                // Faruq: Controlled by preferences
+                if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_LONGPRESS_ADD, true)) {
+                    if (cellInfo.valid) {
+                        // User long pressed on empty space
+                        mWorkspace.setAllowLongPress(false);
+                        showAddDialog(cellInfo);
+                    }
+                }
             } else {
                 if (!(cellInfo.cell instanceof Folder)) {
                     // User long pressed on an item
@@ -2377,7 +2377,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         public void onDrawerOpened() {
             if (!mOpen) {
-                mHandleIcon.reverseTransition(150);
+                //mHandleIcon.reverseTransition(150);
 
                 final Rect bounds = mWorkspace.mDrawerBounds;
                 offsetBoundsToDragLayer(bounds, mAllAppsGrid);
@@ -2397,7 +2397,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         public void onDrawerClosed() {
             if (mOpen) {
-                mHandleIcon.reverseTransition(150);
+                //mHandleIcon.reverseTransition(150);
                 mWorkspace.mDrawerBounds.setEmpty();
                 mOpen = false;
             }

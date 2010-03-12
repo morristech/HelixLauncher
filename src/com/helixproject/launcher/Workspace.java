@@ -53,7 +53,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     /**
      * The velocity at which a fling gesture will cause us to snap to the next screen
      */
-	// Faruq: Lesser force for fling to occur
+    // Faruq: Lesser force for fling to occur
     private static final int SNAP_VELOCITY = 200;
 
     private int mDefaultScreen;
@@ -109,11 +109,11 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     int mDrawerContentHeight;
     int mDrawerContentWidth;
 
-	// Faruq: new properties
-	private int mScreenLoaded = 0;
-	private long lastTapTime = 0;
-	private static final long DOUBLE_TAP_TIME = 250;
-	
+    // Faruq: new properties
+    private int mScreenLoaded = 0;
+    private long lastTapTime = 0;
+    private static final long DOUBLE_TAP_TIME = 250;
+    
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -149,7 +149,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     private void initWorkspace() {
         mScroller = new Scroller(getContext());
         mCurrentScreen = Launcher.DEFAULT_SCREEN;
-		mDefaultScreen = mCurrentScreen;
+        mDefaultScreen = mCurrentScreen;
         Launcher.setScreen(mCurrentScreen);
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
@@ -162,10 +162,10 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         if (!(child instanceof CellLayout)) {
             throw new IllegalArgumentException("A Workspace can only have CellLayout children.");
         }
-		if (mScreenLoaded < Launcher.SCREEN_COUNT) {
-			mScreenLoaded++;
-        	super.addView(child, index, params);
-		}
+        if (mScreenLoaded < Launcher.SCREEN_COUNT) {
+            mScreenLoaded++;
+            super.addView(child, index, params);
+        }
     }
 
     @Override
@@ -641,8 +641,8 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                         currentScreen.cancelLongPress();
                     }
 
-					// Faruq: Cancel any double taps
-					lastTapTime = 0;
+                    // Faruq: Cancel any double taps
+                    lastTapTime = 0;
                 }
                 break;
 
@@ -652,19 +652,19 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 mLastMotionY = y;
                 mAllowLongPress = true;
 
-				// Faruq: Double tap
-				//Log.d("Launcher", "Tapped; Last tap: "+lastTapTime+"; Diff: "+(System.currentTimeMillis() - lastTapTime));
-				if (System.currentTimeMillis() - lastTapTime <= DOUBLE_TAP_TIME) {
-					//Log.d("Launcher", "Double tapped");
-					lastTapTime = 0;
-					
-					if (mLauncher != null && mScroller.isFinished()) {
-						mLauncher.onDoubleTap();
-						return true;
-					}
-				}
+                // Faruq: Double tap
+                //Log.d("Launcher", "Tapped; Last tap: "+lastTapTime+"; Diff: "+(System.currentTimeMillis() - lastTapTime));
+                if (System.currentTimeMillis() - lastTapTime <= DOUBLE_TAP_TIME) {
+                    //Log.d("Launcher", "Double tapped");
+                    lastTapTime = 0;
+                    
+                    if (mLauncher != null && mScroller.isFinished()) {
+                        mLauncher.onDoubleTap();
+                        return true;
+                    }
+                }
 
-				lastTapTime = System.currentTimeMillis();
+                lastTapTime = System.currentTimeMillis();
 
                 /*
                  * If being flinged and user touches the screen, initiate drag;
@@ -676,8 +676,8 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-				// Faruq: Fix LWP interactivity
-				if (mTouchState != TOUCH_STATE_SCROLLING) {
+                // Faruq: Fix LWP interactivity
+                if (mTouchState != TOUCH_STATE_SCROLLING) {
                     final CellLayout currentScreen = (CellLayout)getChildAt(mCurrentScreen);
                     if (!currentScreen.lastDownOnOccupiedCell()) {
                         // Send a tap to the wallpaper if the last down was on empty space
@@ -685,7 +685,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                                 "android.wallpaper.tap", (int) ev.getX(), (int) ev.getY(), 0, null);
                     }
                 }
-				
+                
                 // Release the drag
                 clearChildrenCache();
                 mTouchState = TOUCH_STATE_REST;
@@ -806,11 +806,11 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         snapToScreen(whichScreen, 0);
     }
 
-	void snapToScreen(int whichScreen, int velocityX) {
+    void snapToScreen(int whichScreen, int velocityX) {
         if (!mScroller.isFinished()) return;
 
-		// Faruq: Make revert easing slower
-		int durationOffset = 0;
+        // Faruq: Make revert easing slower
+        int durationOffset = 0;
 
         clearVacantCache();
         enableChildrenCache();
@@ -825,17 +825,17 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
             focusedChild.clearFocus();
         }
 
-		if (!changingScreens) durationOffset = 600;
+        if (!changingScreens) durationOffset = 600;
         
         final int newX = whichScreen * getWidth();
         final int delta = newX - mScrollX;
 
-		// Faruq: Velocity Scrolling
-		if (velocityX == 0) 
-        	mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2 + durationOffset);
-    	else
-			mScroller.startScroll(mScrollX, 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
-		invalidate();
+        // Faruq: Velocity Scrolling
+        if (velocityX == 0) 
+            mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2 + durationOffset);
+        else
+            mScroller.startScroll(mScrollX, 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
+        invalidate();
     }
 
     void startDrag(CellLayout.CellInfo cellInfo) {

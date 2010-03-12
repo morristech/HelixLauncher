@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 public class InstallShortcutReceiver extends BroadcastReceiver {
     private static final String ACTION_INSTALL_SHORTCUT =
-            "com.helixproject.launcher.action.INSTALL_SHORTCUT";
+            "com.android.launcher.action.INSTALL_SHORTCUT";
 
     private final int[] mCoordinates = new int[2];
 
