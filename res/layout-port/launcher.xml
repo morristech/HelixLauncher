@@ -142,8 +142,8 @@
 
     <com.helixproject.launcher.DeleteZone
         android:id="@+id/delete_zone"
-        android:layout_width="76dip"
-        android:layout_height="49dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 		android:layout_marginBottom="6dip"
 
         android:scaleType="center"
