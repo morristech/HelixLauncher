@@ -1900,8 +1900,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             final Intent intent = ((ApplicationInfo) tag).intent;
             int[] pos = new int[2];
             v.getLocationOnScreen(pos);
-            intent.setSourceBounds(
-                    new Rect(pos[0], pos[1], pos[0]+v.getWidth(), pos[1]+v.getHeight()));
+			// Faruq: Revert to make Android 2.0 compatible
+            /*intent.setSourceBounds(
+                    new Rect(pos[0], pos[1], pos[0]+v.getWidth(), pos[1]+v.getHeight()));*/
             startActivitySafely(intent);
         } else if (tag instanceof FolderInfo) {
             handleFolderClick((FolderInfo) tag);
