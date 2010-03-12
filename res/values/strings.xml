@@ -162,7 +162,7 @@
 	<string name="pref_summary_app_uri">Overrides calling intent by class</string>
 
 	<string name="pref_title_launcher_version">Version</string>
-	<string name="pref_summary_launcher_version">1.1</string>
+	<string name="pref_summary_launcher_version">1.1b</string>
 	<string name="pref_title_launcher_author">Author</string>
 	<string name="pref_summary_launcher_author">Faruq (twitter.com/ruqqq)</string>
 	<string name="pref_title_launcher_restart">Restart HelixLauncher</string>
