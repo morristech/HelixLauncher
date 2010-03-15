@@ -48,6 +48,7 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 	public static final String LAUNCHER_DOUBLE_TAP = "pref_key_launcher_double_tap";
 	public static final String LAUNCHER_SCREEN_SIZE = "pref_key_launcher_screen_size";
 	public static final String LAUNCHER_AUTO_ORIENTATION = "pref_key_launcher_auto_orientation";
+	public static final String LAUNCHER_QUICK_SHORTCUTS = "pref_key_launcher_quick_shortcuts";
 	public static final String LAUNCHER_APP1_PACKAGE = "pref_key_launcher_app1_package";
 	public static final String LAUNCHER_APP1_CLASS = "pref_key_launcher_app1_class";
 	public static final String LAUNCHER_APP1_URI = "pref_key_launcher_app1_uri";
@@ -67,6 +68,9 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 
 	private Preference mScreenSize;
 	private Preference mRestart;
+	private Preference mQuickShortcuts;
+	private Preference mHideLabels;
+	private Preference mShowShortcuts;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -74,6 +78,9 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
 
 		mScreenSize = findPreference(LAUNCHER_SCREEN_SIZE);
+		mQuickShortcuts = findPreference(LAUNCHER_QUICK_SHORTCUTS);
+		mHideLabels = findPreference(LAUNCHER_HIDE_LABELS);
+		mShowShortcuts = findPreference(LAUNCHER_SHOW_SHORTCUTS_LABEL);
 		mRestart = findPreference(LAUNCHER_RESTART);
 		setScreenSizeDisplay();
     }
@@ -137,6 +144,12 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 				  .setTitle("WARNING")
 			      .setMessage("Please remove all your icons/widgets before resizing the screen to a smaller size. Press the back button to continue.")
 			      .show();
+		} else if (preference == mHideLabels) {
+			askRestart();
+		} else if (preference == mShowShortcuts) {
+			askRestart();
+		} else if (preference == mQuickShortcuts) {
+			askRestart();
         } else if (preference == mRestart) {
 			askRestart();
 		}

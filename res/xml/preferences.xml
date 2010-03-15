@@ -37,6 +37,10 @@
                         android:defaultValue="true" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_app_settings">
+		<CheckBoxPreference android:key="pref_key_launcher_quick_shortcuts"
+	                        android:title="@string/pref_title_quick_shortcuts"
+	                        android:summary="@string/pref_summary_quick_shortcuts"
+	                        android:defaultValue="true" />
 		<PreferenceScreen android:key="pref_key_launcher_app_settings"
 	                      android:title="@string/pref_app_settings"
 	android:summary="@string/pref_summary_app_settings">
