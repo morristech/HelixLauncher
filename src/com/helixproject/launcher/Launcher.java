@@ -100,6 +100,8 @@ import android.graphics.PorterDuff;
 import android.graphics.Bitmap;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.view.Window;
+import android.view.WindowManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
@@ -442,6 +444,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         } else {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
+
+		if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_FULLSCREEN, false)) {
+        	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
+	                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		} else {
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 
         if (mRestoring) {
             startLoaders();

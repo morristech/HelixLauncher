@@ -144,6 +144,8 @@
 	<string name="pref_title_launcher_screen_size">Screen Size</string>
 	<string name="pref_summary_launcher_screen_size">(REQUIRE RESTART) Screen Size: <xliff:g id="count">%1$s</xliff:g></string>
 	<string name="pref_summary_launcher_set_screen_size">Set screen size</string>
+	<string name="pref_title_fullscreen">Fullscreen</string>
+	<string name="pref_summary_fullscreen">Hide notification bar</string>
 	<string name="pref_title_hide_labels">Hide Icon Titles</string>
 	<string name="pref_summary_hide_labels">Enable/Disable hiding of desktop icons titles</string>
 	<string name="pref_title_show_shortcuts_label">Show Shortcuts Titles</string>
