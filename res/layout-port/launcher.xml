@@ -99,7 +99,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
 
-        android:topOffset="-56dip"
+        android:topOffset="-6dip"
         android:bottomOffset="0dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
