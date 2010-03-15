@@ -114,6 +114,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static final boolean DEBUG_USER_INTERFACE = false;
     private static final boolean ACTIVE_WALLPAPER = true;
     
+	private static final int MENU_GROUP_ADD = 1;
 	// Faruq: Modified menu arrangements (removed redundant item)
     private static final int MENU_ADD = Menu.FIRST + 1;
     private static final int MENU_WALLPAPER_SETTINGS = MENU_ADD + 1;
@@ -134,6 +135,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     static final String EXTRA_CUSTOM_WIDGET = "custom_widget";
     static final String SEARCH_WIDGET = "search_widget";
 
+	static final int WALLPAPER_SCREENS_SPAN = 2;
 	// Faruq: Modifiable screen size
     static int SCREEN_COUNT = 3;
     static int DEFAULT_SCREEN = 2;
