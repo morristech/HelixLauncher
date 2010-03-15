@@ -19,9 +19,7 @@
 -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.launcher"
-    android:sharedUserId="android.uid.shared"
-    android:sharedUserLabel="@string/uid_name">
+    package="com.helixproject.launcher">
 
     <permission
         android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
@@ -62,7 +60,6 @@
 
     <application
         android:name="LauncherApplication"
-        android:process="android.process.acore"
         android:label="@string/application_name"
         android:icon="@drawable/ic_launcher_home">
 
@@ -118,7 +115,7 @@
         <!-- The settings provider contains Home's data, like the workspace favorites -->
         <provider
             android:name="LauncherProvider"
-            android:authorities="com.android.launcher.settings"
+            android:authorities="com.helixproject.launcher.settings"
             android:writePermission="com.android.launcher.permission.WRITE_SETTINGS"
             android:readPermission="com.android.launcher.permission.READ_SETTINGS" />
 
