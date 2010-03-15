@@ -41,6 +41,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.view.MotionEvent;
 import android.util.Log;
 import java.io.File;
@@ -235,6 +237,13 @@ public class QuickShortcut extends ImageView implements View.OnClickListener, Vi
 	public void onClick(View v) {
 		if (intent != null) {
 			//Log.d("Launcher2/QSApp", "Starting "+intent);
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES
+.ECLAIR_MR1) { 
+            	int[] pos = new int[2];
+	            v.getLocationOnScreen(pos);
+	            intent.setSourceBounds(
+	                    new Rect(pos[0], pos[1], pos[0]+v.getWidth(), pos[1]+v.getHeight()));
+			}
 			mLauncher.startActivitySafely(intent);
 		}
 	}

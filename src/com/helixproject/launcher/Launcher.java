@@ -98,6 +98,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.graphics.PorterDuff;
 import android.graphics.Bitmap;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
@@ -1898,11 +1900,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         if (tag instanceof ApplicationInfo) {
             // Open shortcut
             final Intent intent = ((ApplicationInfo) tag).intent;
-            int[] pos = new int[2];
-            v.getLocationOnScreen(pos);
-			// Faruq: Revert to make Android 2.0 compatible
-            /*intent.setSourceBounds(
-                    new Rect(pos[0], pos[1], pos[0]+v.getWidth(), pos[1]+v.getHeight()));*/
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES
+.ECLAIR_MR1) { 
+            	int[] pos = new int[2];
+	            v.getLocationOnScreen(pos);
+	            intent.setSourceBounds(
+	                    new Rect(pos[0], pos[1], pos[0]+v.getWidth(), pos[1]+v.getHeight()));
+			}
             startActivitySafely(intent);
         } else if (tag instanceof FolderInfo) {
             handleFolderClick((FolderInfo) tag);
