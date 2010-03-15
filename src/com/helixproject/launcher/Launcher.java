@@ -122,8 +122,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     static final String EXTRA_CUSTOM_WIDGET = "custom_widget";
     static final String SEARCH_WIDGET = "search_widget";
 
-    static final int SCREEN_COUNT = 3;
-    static final int DEFAULT_SCREN = 1;
+    static final int WALLPAPER_SCREENS_SPAN = 2;
+	// Faruq: Modifiable screen size
+    static int SCREEN_COUNT = 3;
+    static int DEFAULT_SCREEN = 2;
     static final int NUMBER_CELLS_X = 4;
     static final int NUMBER_CELLS_Y = 4;
 
@@ -164,7 +166,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private static Bitmap sWallpaper;
 
     private static final Object sLock = new Object();
-    private static int sScreen = DEFAULT_SCREN;
+    private static int sScreen = DEFAULT_SCREEN;
 
     private static WallpaperIntentReceiver sWallpaperReceiver;
 
@@ -218,6 +220,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 		// Faruq: initialize preference manager
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		// Faruq: Get screen settings
+		Launcher.SCREEN_COUNT = mPrefs.getInt(LauncherPreferenceActivity.LAUNCHER_SCREEN_SIZE, 3);
+		Launcher.DEFAULT_SCREEN = (Launcher.SCREEN_COUNT - 1) / 2;
+		Launcher.sScreen = Launcher.DEFAULT_SCREEN;
 
         mAppWidgetManager = AppWidgetManager.getInstance(this);
 
