@@ -137,7 +137,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     static final String EXTRA_CUSTOM_WIDGET = "custom_widget";
     static final String SEARCH_WIDGET = "search_widget";
 
-    static final int WALLPAPER_SCREENS_SPAN = 2;
 	// Faruq: Modifiable screen size
     static int SCREEN_COUNT = 3;
     static int DEFAULT_SCREEN = 2;
