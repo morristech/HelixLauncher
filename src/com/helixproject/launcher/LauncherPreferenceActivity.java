@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -142,7 +143,7 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 					R.string.pref_summary_launcher_set_screen_size).show();
 			new AlertDialog.Builder(this)
 				  .setTitle("WARNING")
-			      .setMessage("Please remove all your icons/widgets before resizing the screen to a smaller size. Press the back button to continue.")
+			      .setMessage("If you're shrinking the size, your workspace will be cleared. Press the back button to continue.")
 			      .show();
 		} else if (preference == mHideLabels) {
 			askRestart();
@@ -175,10 +176,12 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
         new NumberPickerDialog.OnNumberSetListener() {
             public void onNumberSet(int size) {
 				if (size != getScreenSize()) {
+					updateDb(size);
+		
 					SharedPreferences.Editor editor = mScreenSize.getEditor();
 					editor.putInt(LauncherPreferenceActivity.LAUNCHER_SCREEN_SIZE, size);
 					editor.commit();
-				
+					
 					//Launcher.resetWidgets = true;
 				
 	                setScreenSizeDisplay();
@@ -187,4 +190,15 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 				}
             }
     };
+
+	private void updateDb(int size) {
+		HelixDBHelper helper = new HelixDBHelper(getApplicationContext());
+		SQLiteDatabase db = helper.getWritableDatabase();
+		if (size > getScreenSize()) {
+			db.execSQL("UPDATE favorites SET screen = screen+"+((size-getScreenSize())/2));
+		} else {
+			db.execSQL("DELETE FROM favorites");
+		}
+       	db.close();
+	}
 }
