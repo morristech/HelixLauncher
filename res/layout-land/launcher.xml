@@ -127,7 +127,7 @@
         android:layout_height="fill_parent"
 
         android:orientation="horizontal"
-		android:topOffset="-6dip"
+		android:topOffset="-56dip"
         android:bottomOffset="2dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
