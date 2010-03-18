@@ -242,7 +242,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         
         // Faruq: Get screen settings
         Launcher.SCREEN_COUNT = mPrefs.getInt(LauncherPreferenceActivity.LAUNCHER_SCREEN_SIZE, 3);
-        Launcher.DEFAULT_SCREEN = (Launcher.SCREEN_COUNT - 1) / 2;
+        Launcher.DEFAULT_SCREEN = mPrefs.getInt(LauncherPreferenceActivity.LAUNCHER_DEFAULT_SCREEN, 2)-1;
         Launcher.sScreen = Launcher.DEFAULT_SCREEN;
 
         mAppWidgetManager = AppWidgetManager.getInstance(this);
