@@ -44,7 +44,7 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
     private int mTextureHeight;
 
 	// Faruq: new properties
-	private static final int CLOSE_VELOCITY = 2000;
+	private static final int CLOSE_VELOCITY = 1500;
 	private static final int CLOSE_POS = 130;
 	private float mLastMotionX;
     private float mLastMotionY;
