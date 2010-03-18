@@ -221,7 +221,7 @@ public class QuickShortcut extends ImageView implements View.OnClickListener, Vi
 	        } catch (Exception e) {
 	        }
             
-			this.setImageDrawable(icon);
+			this.setImageDrawable(Utilities.createIconThumbnail(icon, getContext()));
             setFocusable(true);
             
         } else {
