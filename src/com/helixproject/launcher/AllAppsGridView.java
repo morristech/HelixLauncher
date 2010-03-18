@@ -174,10 +174,12 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
                 if (mLastMotionY <= CLOSE_POS && velocityY >= CLOSE_VELOCITY) {
 					//Log.d("AllAppsGridView", "Close Drawer");
 					mLauncher.closeDrawer();
+					return true;
 				}
 				else if (mLastMotionX <= CLOSE_POS && velocityX >= (CLOSE_VELOCITY - 500)) {
 					//Log.d("AllAppsGridView", "Close Drawer");
 					mLauncher.closeDrawer();
+					return true;
 				}
 
                 if (mVelocityTracker != null) {
