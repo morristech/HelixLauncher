@@ -27,6 +27,12 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Canvas;
 
+// Faruq: new imports
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.ViewConfiguration;
+import android.util.Log;
+
 public class AllAppsGridView extends GridView implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener, DragSource {
 
@@ -36,6 +42,14 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
     private Paint mPaint;
     private int mTextureWidth;
     private int mTextureHeight;
+
+	// Faruq: new properties
+	private static final int CLOSE_VELOCITY = 2000;
+	private static final int CLOSE_POS = 130;
+	private float mLastMotionX;
+    private float mLastMotionY;
+	private VelocityTracker mVelocityTracker;
+    private int mMaximumVelocity;
 
     public AllAppsGridView(Context context) {
         super(context);
@@ -59,6 +73,9 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
             mPaint.setDither(false);
         }
         a.recycle();
+
+		final ViewConfiguration configuration = ViewConfiguration.get(getContext());
+        mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
 
     @Override
@@ -126,5 +143,51 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
 
     void setLauncher(Launcher launcher) {
         mLauncher = launcher;
+    }
+
+	@Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+        mVelocityTracker.addMovement(ev);
+
+        final int action = ev.getAction();
+        final float x = ev.getX();
+		final float y = ev.getY();
+
+		//Log.d("AllAppsGridView", "lastX: "+mLastMotionX+"; x: "+x+"; lastY: "+mLastMotionY+"; y: "+y);
+
+        switch (action) {
+        	case MotionEvent.ACTION_DOWN:
+	            // Remember where the motion event started
+	            mLastMotionX = x;
+				mLastMotionY = y;
+	            break;
+	        case MotionEvent.ACTION_UP:
+                final VelocityTracker velocityTracker = mVelocityTracker;
+                velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                int velocityX = (int) velocityTracker.getXVelocity();
+				int velocityY = (int) velocityTracker.getYVelocity();
+
+				//Log.d("AllAppsGridView", "Y: "+y+"; LastMotionY: "+mLastMotionY+"; VelocityY: "+velocityY);
+                if (mLastMotionY <= CLOSE_POS && velocityY >= CLOSE_VELOCITY) {
+					//Log.d("AllAppsGridView", "Close Drawer");
+					mLauncher.closeDrawer();
+				}
+				else if (mLastMotionX <= CLOSE_POS && velocityX >= (CLOSE_VELOCITY - 500)) {
+					//Log.d("AllAppsGridView", "Close Drawer");
+					mLauncher.closeDrawer();
+				}
+
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.recycle();
+                    mVelocityTracker = null;
+                }
+	            break;
+	        case MotionEvent.ACTION_CANCEL:
+        }
+
+        return super.onTouchEvent(ev);
     }
 }

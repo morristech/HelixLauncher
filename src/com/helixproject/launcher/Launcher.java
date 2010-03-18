@@ -1727,11 +1727,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         return super.dispatchKeyEvent(event);
     }
 
-    private void closeDrawer() {
+    public void closeDrawer() {
         closeDrawer(true);
     }
 
-    private void closeDrawer(boolean animated) {
+    public void closeDrawer(boolean animated) {
         if (mDrawer.isOpened()) {
             if (animated) {
                 mDrawer.animateClose();
