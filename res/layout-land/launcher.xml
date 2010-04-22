@@ -72,54 +72,66 @@
         android:focusable="true"
         android:clickable="true" />
 
-	<com.helixproject.launcher.QuickShortcut
-        android:id="@+id/q_shortcut_4"
-        android:layout_width="42dip"
-        android:layout_height="42dip"
-        android:layout_gravity="top|right"
-		android:layout_marginTop="15dip"
-		android:layout_marginRight="5dip"
-		launcher:direction="vertical"
-		launcher:appNumber="4"
+	<LinearLayout
+		android:id="@+id/dock"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right"
+		
+		android:background="@drawable/dock_bg"
+		android:orientation="vertical"
+		>
+		
+		<com.helixproject.launcher.QuickShortcut
+	        android:id="@+id/q_shortcut_4"
+	        android:layout_width="42dp"
+	        android:layout_height="42dp"
+	        android:layout_gravity="top|right"
+			android:layout_marginTop="15dip"
+			android:layout_marginRight="10dip"
+			launcher:direction="vertical"
+			launcher:appNumber="4"
 
-        android:focusable="true"
-        android:clickable="true" />
-	<com.helixproject.launcher.QuickShortcut
-        android:id="@+id/q_shortcut_3"
-        android:layout_width="42dip"
-        android:layout_height="42dip"
-        android:layout_gravity="top|right"
-		android:layout_marginTop="75dip"
-		android:layout_marginRight="5dip"
-		launcher:direction="vertical"
-		launcher:appNumber="3"
+	        android:focusable="true"
+	        android:clickable="true" />
+		<com.helixproject.launcher.QuickShortcut
+	        android:id="@+id/q_shortcut_3"
+	        android:layout_width="42dp"
+	        android:layout_height="42dp"
+	        android:layout_gravity="top|right"
+			android:layout_marginTop="15dip"
+			android:layout_marginRight="10dip"
+			launcher:direction="vertical"
+			launcher:appNumber="3"
 
-        android:focusable="true"
-        android:clickable="true" />
-	<com.helixproject.launcher.QuickShortcut
-        android:id="@+id/q_shortcut_2"
-        android:layout_width="42dip"
-        android:layout_height="42dip"
-        android:layout_gravity="bottom|right"
-		android:layout_marginBottom="75dip"
-		android:layout_marginRight="5dip"
-		launcher:direction="vertical"
-		launcher:appNumber="2"
+	        android:focusable="true"
+	        android:clickable="true" />
+		<com.helixproject.launcher.QuickShortcut
+	        android:id="@+id/q_shortcut_2"
+	        android:layout_width="42dp"
+	        android:layout_height="42dp"
+	        android:layout_gravity="bottom|right"
+			android:layout_marginTop="75dip"
+			android:layout_marginBottom="15dip"
+			android:layout_marginRight="10dip"
+			launcher:direction="vertical"
+			launcher:appNumber="2"
 
-        android:focusable="true"
-        android:clickable="true" />
-	<com.helixproject.launcher.QuickShortcut
-        android:id="@+id/q_shortcut_1"
-        android:layout_width="42dip"
-        android:layout_height="42dip"
-        android:layout_gravity="bottom|right"
-		android:layout_marginBottom="15dip"
-		android:layout_marginRight="5dip"
-		launcher:direction="vertical"
-		launcher:appNumber="1"
+	        android:focusable="true"
+	        android:clickable="true" />
+		<com.helixproject.launcher.QuickShortcut
+	        android:id="@+id/q_shortcut_1"
+	        android:layout_width="42dp"
+	        android:layout_height="42dp"
+	        android:layout_gravity="bottom|right"
+			android:layout_marginBottom="15dip"
+			android:layout_marginRight="10dip"
+			launcher:direction="vertical"
+			launcher:appNumber="1"
 
-        android:focusable="true"
-        android:clickable="true" />
+	        android:focusable="true"
+	        android:clickable="true" />
+	</LinearLayout>
 
     <SlidingDrawer
         android:id="@+id/drawer"
@@ -128,7 +140,7 @@
 
         android:orientation="horizontal"
 		android:topOffset="-56dip"
-        android:bottomOffset="2dip"
+        android:bottomOffset="-3dip"
         android:handle="@+id/all_apps"
         android:content="@+id/content">
 
