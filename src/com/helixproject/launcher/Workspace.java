@@ -18,18 +18,24 @@ package com.helixproject.launcher;
 
 import java.util.ArrayList;
 
+import android.app.ActivityManager;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -113,6 +119,15 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 	private Drawable mPreviousIndicator;
     private Drawable mNextIndicator;
     
+    private Paint mPaint;
+    private Bitmap mWallpaper;
+
+    private int mWallpaperWidth;
+    private int mWallpaperHeight;
+    private float mWallpaperOffset;
+    private boolean mWallpaperLoaded;
+    
+    static public boolean DONUT_WALLPAPER_MODE = false;
     static public boolean WALLPAPER_PANNING = true;
     static public boolean PANEL_JUMP = false;
     
@@ -153,10 +168,35 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         mCurrentScreen = Launcher.DEFAULT_SCREEN;
         mDefaultScreen = mCurrentScreen;
         Launcher.setScreen(mCurrentScreen);
+        
+        mPaint = new Paint();
+        mPaint.setDither(false);
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+    }
+    
+    /**
+     * Set the background's wallpaper.
+     */
+    void loadWallpaper(Bitmap bitmap) {
+        if (mWallpaperManager.getWallpaperInfo() == null) {
+        	if (Workspace.DONUT_WALLPAPER_MODE == false) {
+        		Log.d("Launcher", "SWITCH TO DONUT MODE");
+        		mLauncher.restartLauncher();
+        	}
+        } else {
+        	if (Workspace.DONUT_WALLPAPER_MODE == true) {
+        		Log.d("Launcher", "SWITCH TO ECLAIR MODE");
+        		mLauncher.restartLauncher();
+        	}
+        }
+        
+        mWallpaper = bitmap;
+        mWallpaperLoaded = true;
+        requestLayout();
+        invalidate();
     }
 
     @Override
@@ -398,7 +438,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     }
 
     private void updateWallpaperOffset(int scrollRange) {
-    	if (Workspace.WALLPAPER_PANNING == true) {
+    	if (Workspace.WALLPAPER_PANNING && Workspace.DONUT_WALLPAPER_MODE == false) {
     		mWallpaperManager.setWallpaperOffsetSteps(1.0f / (getChildCount() - 1), 0 );
         	mWallpaperManager.setWallpaperOffsets(getWindowToken(), getScrollX() / (float) scrollRange, 0);
     	}
@@ -426,7 +466,49 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
     @Override
     public boolean isOpaque() {
-        return false;
+    	if (Workspace.DONUT_WALLPAPER_MODE) {
+    		return !mWallpaper.hasAlpha();
+    	} else {
+    		return false;
+    	}
+    }
+    
+    public Bitmap getWallpaperSection(){
+    	CellLayout cell = ((CellLayout) getChildAt(mCurrentScreen));
+        LightingColorFilter cf=new LightingColorFilter(0xFF777777, 0);
+        Paint paint = new Paint();
+        paint.setDither(false);
+        paint.setColorFilter(cf);
+        int width = (cell.getMeasuredWidth()>0)?cell.getMeasuredWidth():0;
+        int height = (cell.getMeasuredHeight()>0)?cell.getMeasuredHeight():0;
+    	//TODO:ADW check screen width&height when cell layout not rendered, so measured w&h are 0
+        if(width==0 || height==0){
+        	Display display = mLauncher.getWindowManager().getDefaultDisplay(); 
+        	int w = display.getWidth();
+        	int h = display.getHeight();
+            this.measure(MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY));
+            width=getMeasuredWidth();
+            height=getMeasuredHeight();
+        }
+    	float percent=(float)mCurrentScreen/(float)(Launcher.SCREEN_COUNT-1);
+    	float x=(float)(mWallpaperWidth/2)*percent;
+        float y=(mWallpaperHeight-height)/2;
+        
+        /*Bitmap b=Bitmap.createBitmap((int) width, (int) height,
+                Bitmap.Config.ARGB_8888);*/
+        Bitmap b=Bitmap.createBitmap((int) width, (int) height,
+                Bitmap.Config.RGB_565);
+        Canvas canvas=new Canvas(b);
+        canvas.drawARGB(255, 0, 255, 0);
+        Rect src=new Rect((int)x, (int)y, (int)x+width, (int)y+height);
+        Rect dst=new Rect(0,0,width,height);
+		canvas.drawBitmap(mWallpaper, src, dst, mPaint);
+        cell.dispatchDraw(canvas);
+        canvas.drawBitmap(b, 0, 0, paint);
+        b=Bitmap.createScaledBitmap(b, width/3, height/3, true);
+        b=Bitmap.createScaledBitmap(b, width, height, true);
+        
+		return b;
     }
 
     @Override
@@ -452,6 +534,14 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
             canvas.clipRect(getScrollX(), top, getScrollX() + mDrawerContentWidth,
                     top + mDrawerContentHeight, Region.Op.DIFFERENCE);
+        }
+        
+        if (Workspace.DONUT_WALLPAPER_MODE) {
+	        float x = getScrollX() * mWallpaperOffset;
+	        if (x + mWallpaperWidth < getRight() - getLeft()) {
+	            x = getRight() - getLeft() - mWallpaperWidth;
+	        }
+	        canvas.drawBitmap(mWallpaper, x, (getBottom() - getTop() - mWallpaperHeight) / 2, mPaint);
         }
 
         // ViewGroup.dispatchDraw() supports many features we don't need:
@@ -503,6 +593,27 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         final int count = getChildCount();
         for (int i = 0; i < count; i++) {
             getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
+        }
+        
+        if (Workspace.DONUT_WALLPAPER_MODE) {
+        	if (mWallpaperLoaded) {
+                mWallpaperLoaded = false;
+
+                Display display = mLauncher.getWindowManager().getDefaultDisplay();
+                boolean isPortrait = display.getWidth() < display.getHeight();
+
+                final int _width = isPortrait ? display.getWidth() : display.getHeight();
+                final int _height = isPortrait ? display.getHeight() : display.getWidth();
+                
+                mWallpaper = Utilities.centerToFit(mWallpaper, _width * Launcher.WALLPAPER_SCREENS_SPAN,
+                        _height, mLauncher);
+                mWallpaperWidth = mWallpaper.getWidth();
+                mWallpaperHeight = mWallpaper.getHeight();
+            }
+
+            final int wallpaperWidth = mWallpaperWidth;
+            mWallpaperOffset = wallpaperWidth > width ? (count * width - wallpaperWidth) /
+                    ((count - 1) * (float) width) : 1.0f;
         }
 
         if (mFirstLayout) {
@@ -693,7 +804,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 // Faruq: Fix LWP interactivity
                 if (mTouchState != TOUCH_STATE_SCROLLING) {
                     final CellLayout currentScreen = (CellLayout)getChildAt(mCurrentScreen);
-                    if (!currentScreen.lastDownOnOccupiedCell()) {
+                    if (!currentScreen.lastDownOnOccupiedCell() && Workspace.DONUT_WALLPAPER_MODE == false) {
                         // Send a tap to the wallpaper if the last down was on empty space
                         mWallpaperManager.sendWallpaperCommand(getWindowToken(), 
                                 "android.wallpaper.tap", (int) ev.getX(), (int) ev.getY(), 0, null);

@@ -29,11 +29,16 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
@@ -59,6 +64,7 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -223,9 +229,22 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 	public static String CUSTOM_ICONS_FOLDER = "/data/data/com.helixproject.launcher/icons/";
 	private ImageView mPreviousView;
     private ImageView mNextView;
+    
+    private static Bitmap sWallpaper;
+    private static WallpaperIntentReceiver sWallpaperReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (WallpaperManager.getInstance(this).getWallpaperInfo() == null) {
+        	Log.d("Launcher", "DONUT MODE");
+        	Workspace.DONUT_WALLPAPER_MODE = true;
+        	setTheme(R.style.ThemeDonut);
+        } else {
+        	Log.d("Launcher", "ECLAIR MODE");
+        	Workspace.DONUT_WALLPAPER_MODE = false;
+        	setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);
+        }
+        
         super.onCreate(savedInstanceState);
         mInflater = getLayoutInflater();
 
@@ -248,7 +267,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         checkForLocaleChange();
         setWallpaperDimension();
-
+        
         setContentView(R.layout.launcher);
 
 		// Faruq: Get QuickShortcuts setting
@@ -295,7 +314,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		}
 		
         setupViews();
-
+        
         registerIntentReceivers();
         registerContentObservers();
 
@@ -313,6 +332,23 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // For handling default keys
         mDefaultKeySsb = new SpannableStringBuilder();
         Selection.setSelection(mDefaultKeySsb, 0);
+    }
+    
+    public void restartLauncher() {
+    	/*KANGED FROM ADW*/
+    	Intent intent = new Intent(getApplicationContext(), Launcher.class);
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(),0, intent, 0);
+
+        // We want the alarm to go off 30 seconds from now.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 1);
+
+        // Schedule the alarm!
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+		ActivityManager acm = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        acm.restartPackage("com.helixproject.launcher");
     }
 
     private void checkForLocaleChange() {
@@ -472,6 +508,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     protected void onResume() {
         super.onResume();
 
+        // Try to reload wallpaper (DONUT)
+        loadWallpaper();
+        
         if (Settings.System.getInt(this.getContentResolver(), "launcher_orientation", 1) == 0 ||
             mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_AUTO_ORIENTATION, true) == false) {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -692,6 +731,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         workspace.setOnLongClickListener(this);
         workspace.setDragger(dragLayer);
         workspace.setLauncher(this);
+        //loadWallpaper();
 
         deleteZone.setLauncher(this);
         deleteZone.setDragController(dragLayer);
@@ -1685,6 +1725,17 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * wallpaper.
      */
     private void registerIntentReceivers() {
+    	if (sWallpaperReceiver == null) {
+            final Application application = getApplication();
+
+            sWallpaperReceiver = new WallpaperIntentReceiver(application, this);
+
+            IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
+            application.registerReceiver(sWallpaperReceiver, filter);
+        } else {
+            sWallpaperReceiver.setLauncher(this);
+        }
+    	
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -2035,6 +2086,23 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 }
             }
         }
+    }
+    
+    private void loadWallpaper() {
+        // The first time the application is started, we load the wallpaper from
+        // the ApplicationContext
+        if (sWallpaper == null) {
+            final Drawable drawable = getWallpaper();
+            if (drawable instanceof BitmapDrawable) {
+                sWallpaper = ((BitmapDrawable) drawable).getBitmap();
+            } else {
+                //throw new IllegalStateException("The wallpaper must be a BitmapDrawable.");
+            }
+        }
+        
+        //Log.d("Launcher", "Load wallpaper");
+        
+        mWorkspace.loadWallpaper(sWallpaper);
     }
 
     /**
@@ -2477,6 +2545,45 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
+    /**
+     * Receives intents from other applications to change the wallpaper.
+     */
+    private static class WallpaperIntentReceiver extends BroadcastReceiver {
+        private final Application mApplication;
+        private WeakReference<Launcher> mLauncher;
+
+        WallpaperIntentReceiver(Application application, Launcher launcher) {
+            mApplication = application;
+            setLauncher(launcher);
+        }
+
+        void setLauncher(Launcher launcher) {
+            mLauncher = new WeakReference<Launcher>(launcher);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Load the wallpaper from the ApplicationContext and store it locally
+            // until the Launcher Activity is ready to use it
+        	Log.d("Launcher", "Received change intent");
+            final Drawable drawable = mApplication.getWallpaper();
+            if (drawable instanceof BitmapDrawable) {
+                sWallpaper = ((BitmapDrawable) drawable).getBitmap();
+            }/* else {
+            	//throw new IllegalStateException("The wallpaper must be a BitmapDrawable.");
+            }*/
+
+            // If Launcher is alive, notify we have a new wallpaper
+            /*if (mLauncher != null) {
+                final Launcher launcher = mLauncher.get();
+                if (launcher != null) {
+                	Log.d("Launcher", "Load new wallpaper");
+                    launcher.loadWallpaper();
+                }
+            }*/
+        }
+    }
+    
     /**
      * Receives notifications whenever the appwidgets are reset.
      */
