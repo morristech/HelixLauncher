@@ -48,7 +48,7 @@
 		android:id="@+id/FPSDisplay"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    
+	    android:visibility="gone"
 	    android:scaleType="center" />
 
 	<ImageView

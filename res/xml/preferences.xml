@@ -10,6 +10,10 @@
 	                    android:defaultValue="2"
 	                          android:title="@string/pref_title_launcher_default_screen"
 	                          android:summary="@string/pref_summary_launcher_default_screen" />
+	    <CheckBoxPreference android:key="pref_key_launcher_panel_jump"
+                        android:title="@string/pref_title_enable_panel_jump"
+                        android:summary="@string/pref_summary_enable_panel_jump"
+                        android:defaultValue="false" />
 		<CheckBoxPreference android:key="pref_key_launcher_fullscreen"
                         android:title="@string/pref_title_fullscreen"
                         android:summary="@string/pref_summary_fullscreen"
@@ -38,6 +42,10 @@
 		<CheckBoxPreference android:key="pref_key_launcher_auto_orientation"
                         android:title="@string/pref_title_auto_orientation"
                         android:summary="@string/pref_summary_auto_orientation"
+                        android:defaultValue="true" />
+        <CheckBoxPreference android:key="pref_key_launcher_wallpaper_panning"
+                        android:title="@string/pref_title_wallpaper_panning"
+                        android:summary="@string/pref_summary_wallpaper_panning"
                         android:defaultValue="true" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_app_settings">
@@ -108,6 +116,11 @@
 	                      android:persistent="false"
 	                      android:summary="@string/pref_summary_launcher_version"
 	                      android:title="@string/pref_title_launcher_version" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_miscellaneous">
+		<CheckBoxPreference android:key="pref_key_launcher_show_fps"
+                        android:title="@string/pref_title_show_fps"
+                        android:defaultValue="false" />
 		<Preference android:key="pref_key_launcher_restart"
 	                      android:persistent="false"
 	                      android:title="@string/pref_title_launcher_restart" />

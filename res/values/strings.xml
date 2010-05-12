@@ -135,20 +135,24 @@
 	<skip />
 	<!-- HelixLauncher Preferences Categories: -->
 	<string name="pref_behavior_settings">Behaviors</string>
-	<string name="pref_screen_settings">Screens</string>
+	<string name="pref_screen_settings">Panels</string>
 	<string name="pref_icon_settings">Icons (Require Restart)</string>
 	<string name="pref_app_settings">Shortcuts (Advanced ONLY)</string>
 	<string name="pref_about">HelixLauncher Mod About</string>
+	<string name="pref_miscellaneous">Miscellaneous</string>
 
 	<!-- HelixLauncher Preferences Items: -->
-	<string name="pref_title_launcher_screen_size">Screen Size</string>
-	<string name="pref_summary_launcher_screen_size">(REQUIRE RESTART) Screen Size: <xliff:g id="count">%1$s</xliff:g></string>
+	<string name="pref_title_launcher_screen_size">Number of Panels </string>
+	<string name="pref_summary_launcher_screen_size">(REQUIRE RESTART) Number of Panels: <xliff:g id="count">%1$s</xliff:g></string>
 	<string name="pref_summary_launcher_set_screen_size">Set screen size</string>
-	<string name="pref_title_launcher_default_screen">Default Screen</string>
-	<string name="pref_summary_launcher_default_screen">(REQUIRE RESTART) Default Screen: <xliff:g id="count">%1$s</xliff:g></string>
+	<string name="pref_title_launcher_default_screen">Default Panel</string>
+	<string name="pref_summary_launcher_default_screen">(REQUIRE RESTART) Default Panel: <xliff:g id="count">%1$s</xliff:g></string>
 	<string name="pref_summary_launcher_set_default_screen">Set default screen </string>
 	<string name="pref_title_fullscreen">Fullscreen</string>
 	<string name="pref_summary_fullscreen">Enable/Disable fullscreen mode; hides notification bar</string>
+	<string name="pref_title_enable_panel_jump">Panel Jump</string>
+	<string name="pref_summary_enable_panel_jump">Enable/Disable jumping to first/last panel at the panel ends</string>
+	
 	<string name="pref_title_hide_labels">Hide Icon Titles</string>
 	<string name="pref_summary_hide_labels">Enable/Disable hiding of desktop icons titles</string>
 	<string name="pref_title_show_shortcuts_label">Show Shortcuts Titles</string>
@@ -160,10 +164,11 @@
 	<string name="pref_summary_double_tap">Enable/Disable double-tap to show previews</string>
 	<string name="pref_title_auto_orientation">Auto-Rotate Screen</string>
 	<string name="pref_summary_auto_orientation">Enable/Disable screen auto orientation</string>
+	<string name="pref_title_wallpaper_panning">Wallpaper Panning</string>
+	<string name="pref_summary_wallpaper_panning">Disable for gain in performance</string>
 	
 	<string name="pref_title_quick_shortcuts">Quick Shortcuts</string>
 	<string name="pref_summary_quick_shortcuts">Enable/Disable quick shortcuts; when disabled, dots will be shown instead</string>
-
 	<string name="pref_summary_app_settings">Hint: You can also drag &amp; drop apps to the bottom bar to add the shortcut</string>
 	<string name="pref_title_app_settings_2">Remove Shortcuts</string>
 	<string name="pref_summary_app_settings_2">Hint: To remove the shortcut, long click on it</string>
@@ -175,9 +180,11 @@
 	<string name="pref_summary_app_uri">Overrides calling intent by class</string>
 
 	<string name="pref_title_launcher_version">Version</string>
-	<string name="pref_summary_launcher_version">1.3</string>
+	<string name="pref_summary_launcher_version">1.4BETA1</string>
 	<string name="pref_title_launcher_author">Author</string>
 	<string name="pref_summary_launcher_author">Faruq (twitter.com/ruqqq)</string>
+	
+	<string name="pref_title_show_fps">Show FPS</string>
 	<string name="pref_title_launcher_restart">Restart HelixLauncher</string>
 
 	<!-- HelixLauncher Preferences Menu: -->

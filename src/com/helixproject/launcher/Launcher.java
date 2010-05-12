@@ -96,6 +96,8 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helixproject.widget.FpsImageView;
+
 /**
  * Default launcher application.
  */
@@ -482,6 +484,17 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 	                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+		
+        // Faruq: Set some workspace properties
+        Workspace.PANEL_JUMP = mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_PANEL_JUMP, false);
+        Workspace.WALLPAPER_PANNING = mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_WALLPAPER_PANNING, true);
+		
+		// Faruq: FPS Code
+		if (mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_SHOW_FPS, true)) {
+			((FpsImageView) findViewById(R.id.FPSDisplay)).setVisibility(View.VISIBLE);
+		} else {
+			((FpsImageView) findViewById(R.id.FPSDisplay)).setVisibility(View.GONE);
 		}
 
         if (mRestoring) {

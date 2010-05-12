@@ -113,6 +113,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 	private Drawable mPreviousIndicator;
     private Drawable mNextIndicator;
     
+    static public boolean WALLPAPER_PANNING = true;
+    static public boolean PANEL_JUMP = false;
+    
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -395,8 +398,10 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     }
 
     private void updateWallpaperOffset(int scrollRange) {
-        //mWallpaperManager.setWallpaperOffsetSteps(1.0f / (getChildCount() - 1), 0 );
-        //mWallpaperManager.setWallpaperOffsets(getWindowToken(), getScrollX() / (float) scrollRange, 0);
+    	if (Workspace.WALLPAPER_PANNING == true) {
+    		mWallpaperManager.setWallpaperOffsetSteps(1.0f / (getChildCount() - 1), 0 );
+        	mWallpaperManager.setWallpaperOffsets(getWindowToken(), getScrollX() / (float) scrollRange, 0);
+    	}
     }
     
     @Override
@@ -786,6 +791,14 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 } else if (velocityX < -SNAP_VELOCITY && mCurrentScreen < getChildCount() - 1) {
                     // Fling hard enough to move right
                     snapToScreen(mCurrentScreen + 1, velocityX);
+                } else if (Workspace.PANEL_JUMP == true) {
+	                if (velocityX > SNAP_VELOCITY+400 && mCurrentScreen == 0) {
+	                	// Fling hard enough to move to most right
+	                    snapToScreen(getChildCount() - 1, velocityX);
+	                } else if (velocityX < -SNAP_VELOCITY-400 && mCurrentScreen == getChildCount() - 1) {
+	                    // Fling hard enough to move to most left
+	                    snapToScreen(0, velocityX);
+	                }
                 } else {
                     snapToDestination();
                 }

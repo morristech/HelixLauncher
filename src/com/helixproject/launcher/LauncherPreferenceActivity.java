@@ -42,14 +42,19 @@ import android.util.Log;
  */
 public class LauncherPreferenceActivity extends PreferenceActivity {
     // Symbolic names for the keys used for preference lookup
-    public static final String LAUNCHER_FULLSCREEN = "pref_key_launcher_fullscreen";
-	public static final String LAUNCHER_LONGPRESS_ADD = "pref_key_launcher_longpress_add";
-	public static final String LAUNCHER_HIDE_LABELS = "pref_key_launcher_hide_labels";
-	public static final String LAUNCHER_SHOW_SHORTCUTS_LABEL = "pref_key_launcher_show_shortcuts_label";
-	public static final String LAUNCHER_DOUBLE_TAP = "pref_key_launcher_double_tap";
 	public static final String LAUNCHER_SCREEN_SIZE = "pref_key_launcher_screen_size";
 	public static final String LAUNCHER_DEFAULT_SCREEN = "pref_key_launcher_default_screen";
+	public static final String LAUNCHER_PANEL_JUMP = "pref_key_launcher_panel_jump";
+	public static final String LAUNCHER_FULLSCREEN = "pref_key_launcher_fullscreen";
+	/**/
+	public static final String LAUNCHER_LONGPRESS_ADD = "pref_key_launcher_longpress_add";
+	public static final String LAUNCHER_DOUBLE_TAP = "pref_key_launcher_double_tap";
 	public static final String LAUNCHER_AUTO_ORIENTATION = "pref_key_launcher_auto_orientation";
+	public static final String LAUNCHER_WALLPAPER_PANNING = "pref_key_launcher_wallpaper_panning";
+	/**/
+	public static final String LAUNCHER_HIDE_LABELS = "pref_key_launcher_hide_labels";
+	public static final String LAUNCHER_SHOW_SHORTCUTS_LABEL = "pref_key_launcher_show_shortcuts_label";
+	/**/
 	public static final String LAUNCHER_QUICK_SHORTCUTS = "pref_key_launcher_quick_shortcuts";
 	public static final String LAUNCHER_APP1_PACKAGE = "pref_key_launcher_app1_package";
 	public static final String LAUNCHER_APP1_CLASS = "pref_key_launcher_app1_class";
@@ -63,6 +68,8 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 	public static final String LAUNCHER_APP4_PACKAGE = "pref_key_launcher_app4_package";
 	public static final String LAUNCHER_APP4_CLASS = "pref_key_launcher_app4_class";
 	public static final String LAUNCHER_APP4_URI = "pref_key_launcher_app4_uri";
+	/**/
+	public static final String LAUNCHER_SHOW_FPS = "pref_key_launcher_show_fps";
 	public static final String LAUNCHER_RESTART = "pref_key_launcher_restart";
 
     // Menu entries
