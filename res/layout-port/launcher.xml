@@ -44,6 +44,13 @@
 
     </com.helixproject.launcher.Workspace>
 
+	<com.helixproject.widget.FpsImageView
+		android:id="@+id/FPSDisplay"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    
+	    android:scaleType="center" />
+
 	<ImageView
         android:id="@+id/previous_screen"
         android:layout_width="93dip"

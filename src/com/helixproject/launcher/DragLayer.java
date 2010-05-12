@@ -94,8 +94,6 @@ public class DragLayer extends FrameLayout implements DragController {
     private final Rect mRect = new Rect();
     private final int[] mDropCoordinates = new int[2];
 
-    private final Vibrator mVibrator = new Vibrator();
-
 	// Faruq: utilize array list instead
     private ArrayList<DragListener> mListener = new ArrayList<DragListener>();
 	//private DragListener mListener;
@@ -238,7 +236,7 @@ public class DragLayer extends FrameLayout implements DragController {
         mDragSource = source;
         mDragInfo = dragInfo;
 
-        mVibrator.vibrate(VIBRATE_DURATION);
+        ((Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATE_DURATION);
 
         mEnteredRegion = false;
 
@@ -273,8 +271,8 @@ public class DragLayer extends FrameLayout implements DragController {
                     case ANIMATION_TYPE_SCALE:
                         final Bitmap dragBitmap = mDragBitmap;
                         canvas.save();
-                        canvas.translate(mScrollX + mLastMotionX - mTouchOffsetX - mBitmapOffsetX,
-                                mScrollY + mLastMotionY - mTouchOffsetY - mBitmapOffsetY);
+                        canvas.translate(getScrollX() + mLastMotionX - mTouchOffsetX - mBitmapOffsetX,
+                                getScrollY() + mLastMotionY - mTouchOffsetY - mBitmapOffsetY);
                         canvas.translate((dragBitmap.getWidth() * (1.0f - value)) / 2,
                                 (dragBitmap.getHeight() * (1.0f - value)) / 2);
                         canvas.scale(value, value);
@@ -285,8 +283,8 @@ public class DragLayer extends FrameLayout implements DragController {
             } else {
                 // Draw actual icon being dragged
                 canvas.drawBitmap(mDragBitmap,
-                        mScrollX + mLastMotionX - mTouchOffsetX - mBitmapOffsetX,
-                        mScrollY + mLastMotionY - mTouchOffsetY - mBitmapOffsetY, mDragPaint);
+                        getScrollX() + mLastMotionX - mTouchOffsetX - mBitmapOffsetX,
+                        getScrollY() + mLastMotionY - mTouchOffsetY - mBitmapOffsetY, mDragPaint);
             }
         }
     }
@@ -366,8 +364,8 @@ public class DragLayer extends FrameLayout implements DragController {
 
             break;
         case MotionEvent.ACTION_MOVE:
-            final int scrollX = mScrollX;
-            final int scrollY = mScrollY;
+            final int scrollX = getScrollX();
+            final int scrollY = getScrollY();
 
             final float touchX = mTouchOffsetX;
             final float touchY = mTouchOffsetY;

@@ -16,14 +16,29 @@
 
 package com.helixproject.launcher;
 
+import static android.util.Log.d;
+import static android.util.Log.e;
+import static android.util.Log.w;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ISearchManager;
 import android.app.SearchManager;
-import android.app.StatusBarManager;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -32,6 +47,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.Intent.ShortcutIconResource;
 import android.content.pm.ActivityInfo;
 import android.content.pm.LabeledIntent;
@@ -41,70 +57,44 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.preference.PreferenceManager;
 import android.provider.LiveFolders;
+import android.provider.Settings;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.TextKeyListener;
-import static android.util.Log.*;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.View.OnLongClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProviderInfo;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.DataInputStream;
-
-// Faruq: new imports
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
-import android.provider.Settings;
-import android.widget.PopupWindow;
-import android.view.HapticFeedbackConstants;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
-import android.graphics.PorterDuff;
-import android.graphics.Bitmap;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.view.Window;
-import android.view.WindowManager;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 
 /**
  * Default launcher application.
@@ -506,11 +496,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             // itself again.
             mWorkspace.post(new Runnable() {
                 public void run() {
-                    ISearchManager searchManagerService = ISearchManager.Stub.asInterface(
-                            ServiceManager.getService(Context.SEARCH_SERVICE));
+                	SearchManager searchmanager = (SearchManager) Launcher.this
+                    .getSystemService(Context.SEARCH_SERVICE);
                     try {
-                        searchManagerService.stopSearch();
-                    } catch (RemoteException e) {
+                    	searchmanager.stopSearch();
+                    } catch (Exception e) {
                         e(LOG_TAG, "error stopping search", e);
                     }    
                 }
@@ -1332,7 +1322,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
         if (appSearchData == null) {
             appSearchData = new Bundle();
-            appSearchData.putString(SearchManager.SOURCE, "launcher-search");
+            appSearchData.putString("source", "launcher-search");
         }
 
         final SearchManager searchManager =
@@ -1384,7 +1374,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                  .setIcon(android.R.drawable.ic_menu_preferences)
                  .setAlphabeticShortcut('L');
         menu.add(0, MENU_NOTIFICATIONS, 0, R.string.menu_notifications)
-                .setIcon(com.android.internal.R.drawable.ic_menu_notifications)
+                .setIcon(R.drawable.ic_menu_notifications)
                 .setAlphabeticShortcut('N');
 
         final Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
@@ -1644,9 +1634,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private void showNotifications() {
-        final StatusBarManager statusBar = (StatusBarManager) getSystemService(STATUS_BAR_SERVICE);
-        if (statusBar != null) {
-            statusBar.expand();
+    	try {
+            Object service = getSystemService("statusbar");
+            if (service != null) {
+                Method expand = service.getClass().getMethod("expand");
+                expand.invoke(service);
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -2238,11 +2232,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             builder.setView(layout);
 
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                public void onShow(DialogInterface dialog) {
-                    mWorkspace.lock();
-                }
-            });
 
             return dialog;
         }
@@ -2287,8 +2276,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * appropriate activity.
      */
     private class CreateShortcut implements DialogInterface.OnClickListener,
-            DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
-            DialogInterface.OnShowListener {
+            DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
         private AddAdapter mAdapter;
 
@@ -2306,7 +2294,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             AlertDialog dialog = builder.create();
             dialog.setOnCancelListener(this);
             dialog.setOnDismissListener(this);
-            dialog.setOnShowListener(this);
 
             return dialog;
         }

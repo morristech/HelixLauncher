@@ -56,7 +56,7 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
     }
 
     public AllAppsGridView(Context context, AttributeSet attrs) {
-        this(context, attrs, com.android.internal.R.attr.gridViewStyle);
+        this(context, attrs, android.R.attr.gridViewStyle);
     }
 
     public AllAppsGridView(Context context, AttributeSet attrs, int defStyle) {
@@ -78,10 +78,10 @@ public class AllAppsGridView extends GridView implements AdapterView.OnItemClick
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
 
-    @Override
+    /*@Override
     public boolean isOpaque() {
         return !mTexture.hasAlpha();
-    }
+    }*/
 
     @Override
     protected void onFinishInflate() {

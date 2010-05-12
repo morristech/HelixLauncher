@@ -16,8 +16,6 @@
 
 package com.helixproject.launcher;
 
-import com.helixproject.launcher.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,10 +24,9 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.internal.widget.NumberPicker;
+import com.helixproject.internal.widget.NumberPicker;
 
 /**
  * A dialog that prompts the user for picking a number
@@ -66,7 +63,7 @@ public class NumberPickerDialog extends AlertDialog implements OnClickListener {
             int rangeMax,
             int title,
 			int desc) {
-        this(context, com.android.internal.R.style.Theme_Dialog_Alert,
+        this(context, android.R.style.Theme_Dialog,
                 callBack, number, rangeMin, rangeMax, title, desc);
     }
 

@@ -192,7 +192,8 @@ public class Search extends LinearLayout
                     Configuration.HARDKEYBOARDHIDDEN_YES) {
                 InputMethodManager inputManager = (InputMethodManager)
                         getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.showSoftInputUnchecked(0, null);
+                // TODO: Find alternative
+                //inputManager.showSoftInputUnchecked(0, null);
             }
             
             // Start the animation, unless it has already started.

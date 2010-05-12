@@ -16,15 +16,19 @@
 
 package com.helixproject.launcher;
 
+import java.util.ArrayList;
+
 import android.app.WallpaperManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ComponentName;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -34,13 +38,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Scroller;
 import android.widget.TextView;
-import android.os.Parcelable;
-import android.os.Parcel;
-
-import java.util.ArrayList;
-
-// Faruq: new imports
-import android.util.Log;
 
 /**
  * The workspace is a wide area with a wallpaper and a finite number of screens. Each
@@ -394,19 +391,18 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     }
 
     private void updateWallpaperOffset() {
-        updateWallpaperOffset(getChildAt(getChildCount() - 1).getRight() - (mRight - mLeft));
+        updateWallpaperOffset(getChildAt(getChildCount() - 1).getRight() - (getRight() - getLeft()));
     }
 
     private void updateWallpaperOffset(int scrollRange) {
-        mWallpaperManager.setWallpaperOffsetSteps(1.0f / (getChildCount() - 1), 0 );
-        mWallpaperManager.setWallpaperOffsets(getWindowToken(), mScrollX / (float) scrollRange, 0);
+        //mWallpaperManager.setWallpaperOffsetSteps(1.0f / (getChildCount() - 1), 0 );
+        //mWallpaperManager.setWallpaperOffsets(getWindowToken(), getScrollX() / (float) scrollRange, 0);
     }
     
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-            mScrollX = mScroller.getCurrX();
-            mScrollY = mScroller.getCurrY();
+        	scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             updateWallpaperOffset();
             postInvalidate();
         } else if (mNextScreen != INVALID_SCREEN) {
@@ -438,7 +434,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         if (mLauncher.isDrawerUp()) {
             final Rect clipBounds = mClipBounds;
             canvas.getClipBounds(clipBounds);
-            clipBounds.offset(-mScrollX, -mScrollY);
+            clipBounds.offset(-getScrollX(), -getScrollY());
             if (mDrawerBounds.contains(clipBounds)) {
                 return;
             }
@@ -449,7 +445,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
             final View view = mLauncher.getDrawerHandle();
             final int top = view.getTop() + view.getHeight();
 
-            canvas.clipRect(mScrollX, top, mScrollX + mDrawerContentWidth,
+            canvas.clipRect(getScrollX(), top, getScrollX() + mDrawerContentWidth,
                     top + mDrawerContentHeight, Region.Op.DIFFERENCE);
         }
 
@@ -705,7 +701,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 mAllowLongPress = false;
                 break;
         }
-
+            
         /*
          * The only time we want to intercept motion events is if we are in the
          * drag mode.
@@ -764,13 +760,13 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 mLastMotionX = x;
 
                 if (deltaX < 0) {
-                    if (mScrollX > 0) {
-                        scrollBy(Math.max(-mScrollX, deltaX), 0);
+                    if (getScrollX() > 0) {
+                        scrollBy(Math.max(-getScrollX(), deltaX), 0);
                         updateWallpaperOffset();
                     }
                 } else if (deltaX > 0) {
                     final int availableToScroll = getChildAt(getChildCount() - 1).getRight() -
-                            mScrollX - getWidth();
+                    	getScrollX() - getWidth();
                     if (availableToScroll > 0) {
                         scrollBy(Math.min(availableToScroll, deltaX), 0);
                         updateWallpaperOffset();
@@ -804,13 +800,13 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         case MotionEvent.ACTION_CANCEL:
             mTouchState = TOUCH_STATE_REST;
         }
-
+        
         return true;
     }
 
     private void snapToDestination() {
         final int screenWidth = getWidth();
-        final int whichScreen = (mScrollX + (screenWidth / 2)) / screenWidth;
+        final int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
 
         snapToScreen(whichScreen);
     }
@@ -844,16 +840,17 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
             focusedChild.clearFocus();
         }
 
-        if (!changingScreens) durationOffset = 600;
+        if (!changingScreens) durationOffset = 200;
         
         final int newX = whichScreen * getWidth();
-        final int delta = newX - mScrollX;
+        final int delta = newX - getScrollX();
 
         // Faruq: Velocity Scrolling
         if (velocityX == 0) 
-            mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2 + durationOffset);
+            mScroller.startScroll(getScrollX(), 0, delta, 0, Math.abs(delta)*2+durationOffset);
         else
-            mScroller.startScroll(mScrollX, 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
+        	//mScroller.startScroll(getScrollX(), 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*10));
+            mScroller.startScroll(getScrollX(), 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
         invalidate();
     }
 
@@ -1296,7 +1293,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                                 mLauncher.getPackageManager(), info);
                         if (icon != null && icon != info.icon) {
                             info.icon.setCallback(null);
-                            info.icon = Utilities.createIconThumbnail(icon, mContext);
+                            info.icon = Utilities.createIconThumbnail(icon, getContext());
                             info.filtered = true;
                             ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(null,
                                     info.icon, null, null);
