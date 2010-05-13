@@ -905,10 +905,12 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 } else if (Workspace.PANEL_JUMP == true) {
 	                if (velocityX > SNAP_VELOCITY+400 && mCurrentScreen == 0) {
 	                	// Fling hard enough to move to most right
-	                    snapToScreen(getChildCount() - 1, velocityX);
+	                    snapToScreen(getChildCount() - 1, 4000);
 	                } else if (velocityX < -SNAP_VELOCITY-400 && mCurrentScreen == getChildCount() - 1) {
 	                    // Fling hard enough to move to most left
-	                    snapToScreen(0, velocityX);
+	                    snapToScreen(0, 4000);
+	                } else {
+	                	snapToDestination();
 	                }
                 } else {
                     snapToDestination();
@@ -974,7 +976,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
             mScroller.startScroll(getScrollX(), 0, delta, 0, Math.abs(delta)*2+durationOffset);
         else
         	//mScroller.startScroll(getScrollX(), 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*10));
-            mScroller.startScroll(getScrollX(), 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*20) + durationOffset);
+            mScroller.startScroll(getScrollX(), 0, delta, 0, ((Math.abs(delta) / (Math.abs(velocityX) / 100))*15) + durationOffset);
         invalidate();
     }
 
