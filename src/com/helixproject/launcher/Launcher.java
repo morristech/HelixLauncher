@@ -282,6 +282,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 			findViewById(R.id.previous_screen).setVisibility(View.GONE);
 			findViewById(R.id.next_screen).setVisibility(View.GONE);
 		} else {
+			findViewById(R.id.dock).setVisibility(View.GONE);
 			findViewById(R.id.q_shortcut_1).setVisibility(View.GONE);
 			findViewById(R.id.q_shortcut_2).setVisibility(View.GONE);
 			findViewById(R.id.q_shortcut_3).setVisibility(View.GONE);
@@ -510,6 +511,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         // Try to reload wallpaper (DONUT)
         loadWallpaper();
+        
+        // Faruq: Hide Dock if option is disabled
+		if (!mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_SHOW_DOCK, true)) {
+			((LinearLayout)findViewById(R.id.dock)).setBackgroundResource(0);
+		} else {
+			((LinearLayout)findViewById(R.id.dock)).setBackgroundResource(R.drawable.dock_bg);
+		}
         
         if (Settings.System.getInt(this.getContentResolver(), "launcher_orientation", 1) == 0 ||
             mPrefs.getBoolean(LauncherPreferenceActivity.LAUNCHER_AUTO_ORIENTATION, true) == false) {

@@ -169,6 +169,8 @@
 	
 	<string name="pref_title_quick_shortcuts">Quick Shortcuts</string>
 	<string name="pref_summary_quick_shortcuts">Enable/Disable quick shortcuts; when disabled, dots will be shown instead</string>
+	<string name="pref_title_show_dock">Show Dock</string>
+	<string name="pref_summary_show_dock">Enable/Disable glass dock</string>
 	<string name="pref_summary_app_settings">Hint: You can also drag &amp; drop apps to the bottom bar to add the shortcut</string>
 	<string name="pref_title_app_settings_2">Remove Shortcuts</string>
 	<string name="pref_summary_app_settings_2">Hint: To remove the shortcut, long click on it</string>

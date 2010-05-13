@@ -56,6 +56,7 @@ public class LauncherPreferenceActivity extends PreferenceActivity {
 	public static final String LAUNCHER_SHOW_SHORTCUTS_LABEL = "pref_key_launcher_show_shortcuts_label";
 	/**/
 	public static final String LAUNCHER_QUICK_SHORTCUTS = "pref_key_launcher_quick_shortcuts";
+	public static final String LAUNCHER_SHOW_DOCK = "pref_key_launcher_show_dock";
 	public static final String LAUNCHER_APP1_PACKAGE = "pref_key_launcher_app1_package";
 	public static final String LAUNCHER_APP1_CLASS = "pref_key_launcher_app1_class";
 	public static final String LAUNCHER_APP1_URI = "pref_key_launcher_app1_uri";

@@ -99,6 +99,32 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
     public void onDrop(DragSource source, int x, int y, int xOffset, int yOffset, Object dragInfo) {
         final ItemInfo item = (ItemInfo) dragInfo;
 
+        //Log.d("DeleteZone", "uninstallMode: "+uninstallMode+"; Timer: "+(System.currentTimeMillis() - deleteTimer)+" vs "+(UNINSTALL_TIME+1000)+"; "+(dragInfo instanceof ApplicationInfo));
+        // Faruq: Modified from AdvancedLauncher
+		if (uninstallMode && (System.currentTimeMillis() - deleteTimer >= UNINSTALL_TIME+1000) && dragInfo instanceof ApplicationInfo) {
+			String pkg = null;
+			
+			final ApplicationInfo app = (ApplicationInfo) dragInfo;
+ 
+			//Log.d("DeleteZone", "Application Uninstall Code Initiated");
+			if(app.iconResource != null) {
+				pkg = app.iconResource.packageName;
+			} else {
+				PackageManager mgr = getContext().getPackageManager();
+				ResolveInfo res = mgr.resolveActivity(app.intent, 0);
+				pkg = res.activityInfo.packageName;
+			}
+			
+			// Reset time
+			uninstallMode = false;
+			deleteTimer = System.currentTimeMillis();
+			
+			onDrop(source, x, y, xOffset, yOffset, dragInfo);
+			Log.d("DeleteZone", "Uninstalling application "+pkg);
+			Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:"+pkg));
+			getContext().startActivity(uninstallIntent);
+		}
+        
         if (item.container == -1) return;
 
         final LauncherModel model = Launcher.getModel();
@@ -126,32 +152,6 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
                 appWidgetHost.deleteAppWidgetId(launcherAppWidgetInfo.appWidgetId);
             }
         }
-        
-        //Log.d("DeleteZone", "uninstallMode: "+uninstallMode+"; Timer: "+(System.currentTimeMillis() - deleteTimer)+" vs "+(UNINSTALL_TIME+1000)+"; "+(dragInfo instanceof ApplicationInfo));
-        // Faruq: Modified from AdvancedLauncher
-		if (uninstallMode && (System.currentTimeMillis() - deleteTimer >= UNINSTALL_TIME+1000) && dragInfo instanceof ApplicationInfo) {
-			String pkg = null;
-			
-			final ApplicationInfo app = (ApplicationInfo) dragInfo;
- 
-			//Log.d("DeleteZone", "Application Uninstall Code Initiated");
-			if(app.iconResource != null) {
-				pkg = app.iconResource.packageName;
-			} else {
-				PackageManager mgr = getContext().getPackageManager();
-				ResolveInfo res = mgr.resolveActivity(app.intent, 0);
-				pkg = res.activityInfo.packageName;
-			}
-			
-			// Reset time
-			uninstallMode = false;
-			deleteTimer = System.currentTimeMillis();
-			
-			onDrop(source, x, y, xOffset, yOffset, dragInfo);
-			Log.d("DeleteZone", "Uninstalling application "+pkg);
-			Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:"+pkg));
-			getContext().startActivity(uninstallIntent);
-		}
         
         LauncherModel.deleteItemFromDatabase(mLauncher, item);
     }
