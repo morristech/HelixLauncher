@@ -9,7 +9,9 @@ import android.database.SQLException;
 import android.util.Log;
 
 class HelixDBHelper extends SQLiteOpenHelper {
-
+	private static final String LOG_TAG = "HelixDBHelper";
+    private static final boolean LOGD = true;
+	
     private final Context mContext;
 
     HelixDBHelper(Context context) {
@@ -20,10 +22,32 @@ class HelixDBHelper extends SQLiteOpenHelper {
 
 	@Override
     public void onCreate(SQLiteDatabase db) {
+		/*if (LOGD) Log.d(LOG_TAG, "creating new Helix database");
+        
+        db.execSQL("CREATE TABLE helix_extras (" +
+                "_id INTEGER PRIMARY KEY," +
+                "title TEXT," +
+                "intent TEXT," +
+                "container INTEGER," +
+                "screen INTEGER," +
+                "cellX INTEGER," +
+                "cellY INTEGER," +
+                "spanX INTEGER," +
+                "spanY INTEGER," +
+                "itemType INTEGER," +
+                "appWidgetId INTEGER NOT NULL DEFAULT -1," +
+                "isShortcut INTEGER," +
+                "iconType INTEGER," +
+                "iconPackage TEXT," +
+                "iconResource TEXT," +
+                "icon BLOB," +
+                "uri TEXT," +
+                "displayMode INTEGER" +
+                "quickSort INTEGER" +
+                ");");*/
 	}
 	
 	@Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	}
-
 }

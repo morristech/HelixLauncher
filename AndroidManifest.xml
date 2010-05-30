@@ -133,4 +133,5 @@
             android:readPermission="com.android.launcher.permission.READ_SETTINGS" />
 
     </application>
+<uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"></uses-permission>
 </manifest>

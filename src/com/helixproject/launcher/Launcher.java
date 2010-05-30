@@ -61,6 +61,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -102,6 +103,7 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helixproject.internal.util.HppIntent;
 import com.helixproject.widget.FpsImageView;
 
 /**
@@ -232,7 +234,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     
     private static Bitmap sWallpaper;
     private static WallpaperIntentReceiver sWallpaperReceiver;
-
+    
+    //private SQLiteDatabase helixDB;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (WallpaperManager.getInstance(this).getWallpaperInfo() == null) {
@@ -248,6 +252,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         super.onCreate(savedInstanceState);
         mInflater = getLayoutInflater();
 
+        // Initialize HelixDB
+        /*HelixDBHelper helper = new HelixDBHelper(getApplicationContext());
+		helixDB = helper.getWritableDatabase();*/
+		
         // Faruq: initialize preference manager
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         
@@ -1103,8 +1111,18 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         } else if (sModel.isDesktopLoaded()) {
             sModel.addDesktopAppWidget(launcherInfo);
         }
+        
+        // finish load a widget, send it an intent
+        appwidgetReadyBroadcast(appWidgetId, appWidgetInfo.provider);
     }
 
+    private void appwidgetReadyBroadcast(int appWidgetId, ComponentName cname) {
+    	Log.d(LOG_TAG, "appwidgetReadyBroadcast");
+        Intent ready = new Intent(HppIntent.ACTION.ACTION_READY).putExtra(
+                HppIntent.EXTRA.EXTRA_APPWIDGET_ID, appWidgetId).setComponent(cname);
+        sendBroadcast(ready);
+    }
+    
     public LauncherAppWidgetHost getAppWidgetHost() {
         return mAppWidgetHost;
     }
@@ -1342,6 +1360,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         getContentResolver().unregisterContentObserver(mWidgetObserver);
         unregisterReceiver(mApplicationsReceiver);
         unregisterReceiver(mCloseSystemDialogsReceiver);
+        
+        mWorkspace.unregisterProvider();
     }
 
     @Override
@@ -2024,6 +2044,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     item.cellY, item.spanX, item.spanY, !desktopLocked);
 
             workspace.requestLayout();
+            
+            // finish load a widget, send it an intent
+            appwidgetReadyBroadcast(appWidgetId, appWidgetInfo.provider);
         }
 
         if (appWidgets.isEmpty()) {
